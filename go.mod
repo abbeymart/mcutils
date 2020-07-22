@@ -1,3 +1,3 @@
-module github.com/abbeymart/mcutils
+module github.com/abbeymart/goutils
 
 go 1.13
