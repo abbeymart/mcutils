@@ -1,1 +1,3 @@
-version 0.0.1
+# mcutilsgo
+
+- Shared and common utility functions
