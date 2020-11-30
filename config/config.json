@@ -1,0 +1,109 @@
+{
+  "address": "0.0.0.0:8000",
+  "readTimeout": 10,
+  "writeTimeout": 600,
+  "static": "public",
+  "port": 8000,
+  "hosts": [
+    {"client": "https://localhost:8080"},
+    {"mc": "https://localhost:4000"},
+    {"central": "https://localhost:4400"},
+    {"mpe": "https://localhost:5000"},
+    {"shoppersWorld": "https://localhost:5100"},
+    {"info": "https://localhost:5200"},
+    {"event": "https://localhost:5300"},
+    {"asset": "https://localhost:5500"},
+    {"pam": "https://localhost:5600"},
+    {"trade": "https://localhost:6000"},
+    {"hcm": "https://localhost:7000"},
+    {"fin": "https://localhost:7200"},
+    {"sdm": "https://localhost:7400"},
+    {"scm": "https://localhost:7600"},
+    {"docs": "https://localhost:3500"},
+    {"verify": "/verify"},
+    {"login": "/login"},
+    {"resetPassword": "/password/reset"},
+    {"uploadFiles": "/upload/files"},
+    {"googleApis": "http://googleapis.com/"}
+  ],
+  "mongoDb": [
+    {"host": "tbd"},
+    {"port": 27017},
+    {"username": "tbd"},
+    {"password": "tbd"},
+    {"url": "mongodb://localhost:27017/mc-central"}
+  ],
+  "postgres": [
+    {"host": "tbd"},
+    {"port": 27017},
+    {"username": "tbd"},
+    {"password": "tbd"},
+    {"url": "mongodb://localhost:27017/mc-central"}
+  ],
+  "redis": [
+    {"host": "tbd"},
+    {"port": 27017},
+    {"username": "tbd"},
+    {"password": "tbd"},
+    {"url": "mongodb://localhost:27017/mc-central"}
+  ],
+  "emails": [
+    {"msgFrom": "'mConnect' <suppport@mconnect.biz"},
+    {"amazon": [
+      {"accessKey": "AKIA5G3PE5NSNHPU7F6L"},
+      {"username": "AKIA5G3PE5NSNHPU7F6L"},
+      {"password": "BPdnjRodZlDVDxA8IPY+KI94W2h+AGXvfl8frpqDMl9O"},
+      {"server": "email-smtp.us-west-2.amazonaws.com"},
+      {"port": 465},
+      {"tls": "Yes"}
+    ]},
+    {"sendGrid": [
+      {"mcEmailServiceAPI": "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"}
+    ]}
+  ],
+  "files": [
+    {"amazon": [
+      {"accessKeyId": "AKIAIJSFDKMLXZB22VRA"},
+      { "secretAccessKey": "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"},
+      { "bucketName": "space.mconnect.biz"},
+      {"bucketPath": ""}
+    ]},
+    {"digitalOcean": [
+      {"accessKeyId": ""},
+      {"secretAccessKey": ""},
+      {"bucketName": ""},
+      {"bucketPath": ""}
+    ]},
+    {"google ": []}
+  ],
+  "filePath": "mcfiles",
+  "localPath": "public/upload/files",
+  "trustedSites": [
+    "https://localhost",
+    "https://github.com",
+    "https://google.com"
+  ],
+  "clients": [
+    {"https": [
+      "https://localhost:4000",
+      "http://localhost",
+      "https://localhost",
+      "https://localhost:8080",
+      "https://localhost:8081"
+    ]},
+    {"apis": [
+      "https://localhost:4000",
+      "http://localhost",
+      "https://localhost",
+      "https://localhost:8080",
+      "https://localhost:8081"
+    ]},
+    {"sockets": [
+      "https://localhost:4000",
+      "http://localhost",
+      "https://localhost",
+      "https://localhost:8080",
+      "https://localhost:8081"
+    ]}
+  ]
+}
