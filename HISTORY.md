@@ -1,7 +1,9 @@
 # Historical logs
 
-- TODO: rewrite mcutils (node-ts) functions in go
+- TODO: refactor, add test cases & test | update stat & go-helper functions
 
 ## Version 0.1.0
 
-- Release date: TBD
+- Release date: Dec 06, 2020
+- Shared/Common Utility, Statistics & Go-Helper functions
+- See the test files for different test cases / scenarios and usage (in-progress)
