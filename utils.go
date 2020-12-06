@@ -293,7 +293,9 @@ func PythagorasGen(limit uint, pythagorasChan chan []uint) {
 			}
 		}
 	}
-	close(pythagorasChan)
+	if pythagorasChan != nil {
+		close(pythagorasChan)
+	}
 }
 
 // counter
@@ -405,7 +407,9 @@ func MapGen(arr []interface{}, mapFunc func(interface{}) interface{}, mapChan ch
 	for _, v := range arr {
 		mapChan <- mapFunc(v)
 	}
-	close(mapChan)
+	if mapChan != nil {
+		close(mapChan)
+	}
 }
 
 func MapInt(arr []int, mapFunc func(int) int) []int {
@@ -432,7 +436,10 @@ func FilterGen(arr []interface{}, filterFunc func(interface{}) bool, filterChan 
 			filterChan <- v
 		}
 	}
-	close(filterChan)
+	if filterChan != nil {
+		close(filterChan)
+	}
+
 }
 
 func Take(num uint, arr []interface{}) chan<- interface{} {
@@ -461,7 +468,9 @@ func TakeGen(num uint, arr []interface{}, takeChan chan<- interface{}) {
 		takeChan <- v
 		cnt++
 	}
-	close(takeChan)
+	if takeChan != nil {
+		close(takeChan)
+	}
 }
 
 func NaturalNumbers(count uint) chan<- uint {
@@ -483,7 +492,9 @@ func NaturalNumbersGen(count uint, naturalChan chan<- uint) {
 	for cnt = 0; cnt < count; cnt++ {
 		naturalChan <- cnt
 	}
-	close(naturalChan)
+	if naturalChan != nil {
+		close(naturalChan)
+	}
 }
 
 // Infinite natural numbers generation
