@@ -4,7 +4,11 @@ github.com/abbeymart/mcresponsego v0.2.2 h1:RuVLRTaCejaCwyli353GWxEBRjSBCAnZ9/fb
 github.com/abbeymart/mcresponsego v0.2.2/go.mod h1:6twtms15Y8A1ngqY1jgRADvZdqCkPHl5Q//WqlhWLSk=
 github.com/abbeymart/mcresponsego v0.3.0 h1:ZFLCAo1DxG4RNcCiwVKUTcCa8X3ACjPJTfSVo6A+A40=
 github.com/abbeymart/mcresponsego v0.3.0/go.mod h1:6twtms15Y8A1ngqY1jgRADvZdqCkPHl5Q//WqlhWLSk=
+github.com/abbeymart/mcresponsego v0.3.1 h1:cgOzpD5UyoUpchxgFVmtoP4ZfA8SL4/AOTM6g2uAkXQ=
+github.com/abbeymart/mcresponsego v0.3.1/go.mod h1:c4EoVut+Fj3IAuNH6yKDeQECReLqzxDgz3+O5AH1bLQ=
 github.com/abbeymart/mctestgo v0.5.0 h1:uauSUZ+fKM496DQx2DmAKX1A/X/ekeup8LiZy1MaGFA=
 github.com/abbeymart/mctestgo v0.5.0/go.mod h1:6z87w/tScZc/s/EbNT8Uj9+1MEGIPvYgphiLxji7hq0=
+github.com/abbeymart/mctestgo v0.5.1 h1:PhCjT59mhRM5WcH6oDddrdJeiQpQGGliITk6F5T0MjM=
+github.com/abbeymart/mctestgo v0.5.1/go.mod h1:6z87w/tScZc/s/EbNT8Uj9+1MEGIPvYgphiLxji7hq0=
 github.com/lib/pq v1.8.0 h1:9xohqzkUwzR4Ga4ivdTcawVS89YSDVxXMa3xJX3cGzg=
 github.com/lib/pq v1.8.0/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
