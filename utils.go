@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/abbeymart/mcresponsego"
+	"github.com/abbeymart/mcresponse"
 	"math"
 	"strconv"
 	"strings"
@@ -18,6 +18,33 @@ import (
 func ArrayContains(arr []string, str string) bool {
 	for _, a := range arr {
 		if a == str {
+			return true
+		}
+	}
+	return false
+}
+
+func ArrayContain(arr []interface{}, str interface{}) bool {
+	for _, a := range arr {
+		if a == str {
+			return true
+		}
+	}
+	return false
+}
+
+func ArrayStringContains(arr []string, val string) bool {
+	for _, a := range arr {
+		if a == val {
+			return true
+		}
+	}
+	return false
+}
+
+func ArrayIntContains(arr []int, val int) bool {
+	for _, a := range arr {
+		if a == val {
 			return true
 		}
 	}

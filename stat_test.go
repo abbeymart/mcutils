@@ -5,8 +5,8 @@
 package mcutils
 
 import (
-	"github.com/abbeymart/mcresponsego"
-	"github.com/abbeymart/mctestgo"
+	"github.com/abbeymart/mcresponse"
+	"github.com/abbeymart/mctest"
 	"testing"
 )
 
