@@ -171,7 +171,7 @@ func FactorialTail(num uint, acc uint) uint {
 	return FactorialTail(num-1, num*acc)
 }
 
-func FactGen(num uint) chan<- uint {
+func FactGen(num uint) chan uint {
 	var factRes = make(chan uint, num)
 	var x uint
 	for x = 1; x <= num; x++ {
