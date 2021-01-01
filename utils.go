@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/abbeymart/mcresponse"
+	"github.com/abbeymart/mctypes"
 	"math"
 	"strconv"
 	"strings"
@@ -122,7 +123,7 @@ func getLocale(localeFiles Locale, options LocaleOptions) LocaleContent {
 	return myLocale
 }
 
-func GetParamsMessage(msgObject MessageObject) mcresponse.ResponseMessage {
+func GetParamsMessage(msgObject mctypes.MessageObject, msgType string) mcresponse.ResponseMessage {
 	var messages = ""
 
 	for key, val := range msgObject {
@@ -132,7 +133,10 @@ func GetParamsMessage(msgObject MessageObject) mcresponse.ResponseMessage {
 			messages = fmt.Sprintf("%v : %v", key, val)
 		}
 	}
-	return mcresponse.GetResMessage("validateError", mcresponse.ResponseMessageOptions{
+	if msgType == "" {
+		msgType = "unknown"
+	}
+	return mcresponse.GetResMessage(msgType, mcresponse.ResponseMessageOptions{
 		Message: messages,
 		Value:   nil,
 	})
@@ -140,7 +144,7 @@ func GetParamsMessage(msgObject MessageObject) mcresponse.ResponseMessage {
 
 func ShortString(str string, maxLength uint) string {
 	if len(str) > int(maxLength) {
-		// return slice of the string, up to/including the maxLength
+		// return slice of the string, up to/including the maxLength, and append "..."
 		return str[:int(maxLength)+1] + "..."
 	}
 	// return whole string
@@ -153,8 +157,6 @@ func StringToBool(val string) bool {
 	// perform the conversion
 	if strVal == "true" || strVal == "t" || strVal == "yes" || strVal == "y" {
 		return true
-	} else if strVal == "false" || strVal == "f" || strVal == "no" || strVal == "n" {
-		return false
 	} else if intVal, err := strconv.Atoi(strVal); err == nil && intVal > 0 {
 		return true
 	} else {
