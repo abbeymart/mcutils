@@ -2,11 +2,16 @@
 
 - TODO: refactor, add test cases & test | update stat & go-helper functions
 
+## Version 0.1.6
+
+- Release date: April 26, 2022
+- Updated to go-1.18 and added-refactor-functions
+
 ## Version 0.1.1
 
 - Release date: Dec 08, 2020
 - Updated github package link / reference
-- Patched to use mctestgo v0.5.1, mcresponsego v0.3.1
+- Patched to use mctestgo v0.5.1, mcresponse v0.3.1
 - Added test cases file placeholder
 
 ## Version 0.1.0

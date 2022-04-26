@@ -9,52 +9,15 @@ import (
 	"errors"
 	"fmt"
 	"github.com/abbeymart/mcresponse"
-	"github.com/abbeymart/mctypes"
 	"math"
 	"strconv"
 	"strings"
 	"time"
 )
 
-func ArrayContains(arr []string, str string) bool {
-	for _, a := range arr {
-		if a == str {
-			return true
-		}
-	}
-	return false
-}
-
-func ArrayContain(arr []interface{}, str interface{}) bool {
-	for _, a := range arr {
-		if a == str {
-			return true
-		}
-	}
-	return false
-}
-
-func ArrayStringContains(arr []string, val string) bool {
-	for _, a := range arr {
-		if a == val {
-			return true
-		}
-	}
-	return false
-}
-
-func ArrayIntContains(arr []int, val int) bool {
-	for _, a := range arr {
-		if a == val {
-			return true
-		}
-	}
-	return false
-}
-
 func CamelCase(text string, sep string) (string, error) {
 	// validate acceptable separators (" ", "_", "__", ".", "|")
-	sepArr := []string{" ", "_", "__", ".", "|"}
+	sepArr := []interface{}{" ", "_", "__", ".", "|"}
 	if !ArrayContains(sepArr, sep) {
 		textMsg := fmt.Sprintf("missing or unacceptable separator: %v", sep)
 		return text, errors.New(textMsg)
@@ -78,7 +41,7 @@ func CamelCase(text string, sep string) (string, error) {
 func PascalCase(text string, sep string) (string, error) {
 	// validate acceptable separators (" ", "_", "__", ".", "|")
 	sepArr := []string{" ", "_", "__", ".", "|"}
-	if !ArrayContains(sepArr, sep) {
+	if !ArrayStringContains(sepArr, sep) {
 		textMsg := fmt.Sprintf("missing or unacceptable separator: %v", sep)
 		return text, errors.New(textMsg)
 	}
@@ -123,7 +86,7 @@ func getLocale(localeFiles Locale, options LocaleOptions) LocaleContent {
 	return myLocale
 }
 
-func GetParamsMessage(msgObject mctypes.MessageObject, msgType string) mcresponse.ResponseMessage {
+func GetParamsMessage(msgObject MessageObject, msgType string) mcresponse.ResponseMessage {
 	var messages = ""
 
 	for key, val := range msgObject {
@@ -238,12 +201,25 @@ func FiboSeries(num uint) chan<- uint {
 	return fiboChannel
 }
 
-func IsPrime(n uint) bool {
+func PrimeNumbers(num int) (pNums []int) {
+next:
+	for outer := 2; outer < num; outer++ {
+		for inner := 2; inner < outer; inner++ {
+			if outer%inner == 0 {
+				continue next
+			}
+			pNums = append(pNums, outer)
+		}
+	}
+	return pNums
+}
+
+func IsPrime(n int) bool {
 	// prime number count algorithm condition
 	s := math.Floor(math.Sqrt(float64(n)))
 	for x := 2; x <= int(s); x++ {
 		//Perform remainder of n for all numbers from 2 to s(short-algorithm-value)/n-1
-		if n%uint(x) == 0 {
+		if n%x == 0 {
 			return false
 		}
 	}
@@ -327,16 +303,30 @@ func PythagorasGen(limit uint, pythagorasChan chan []uint) {
 	}
 }
 
-// counter
+// counters
+
 type ArrayValue []interface{}
 type ArrayOfString []string
 type ArrayOfInt []int
 type ArrayOfFloat []float64
 type DataCount map[string]int
 
+func (val ArrayValue) counterGeneric() map[interface{}]int {
+	var count = make(map[interface{}]int)
+	for _, val := range val {
+		if v, ok := count[val]; ok && v > 0 {
+			count[val] = v + 1
+		} else {
+			count[val] = 1
+		}
+	}
+	return count
+}
+
 func (val ArrayValue) counter() DataCount {
 	var count = make(map[string]int)
 	for _, val := range val {
+		// stringify val=>keys
 		var jsonVal, _ = json.Marshal(val)
 		var countKey = string(jsonVal)
 		if v, ok := count[countKey]; ok && v > 0 {
@@ -349,19 +339,11 @@ func (val ArrayValue) counter() DataCount {
 }
 
 func (val ArrayValue) set() []string {
-	var count = make(map[string]int)
-	for _, itVal := range val {
-		var jsonVal, _ = json.Marshal(itVal)
-		var countKey = string(jsonVal)
-		if v, ok := count[countKey]; ok && v > 0 {
-			count[countKey] = v + 1
-		} else {
-			count[countKey] = 1
-		}
-	}
+	// refactor, using counter method
+	var count = val.counter()
 	// compute set values
 	setValue := make([]string, len(count))
-	for keyValue, _ := range count {
+	for keyValue := range count {
 		setValue = append(setValue, keyValue)
 	}
 	return setValue
@@ -370,17 +352,15 @@ func (val ArrayValue) set() []string {
 func (val ArrayOfString) setOfString() []string {
 	var count = make(map[string]int)
 	for _, itVal := range val {
-		var jsonVal, _ = json.Marshal(itVal)
-		var countKey = string(jsonVal)
-		if v, ok := count[countKey]; ok && v > 0 {
-			count[countKey] = v + 1
+		if v, ok := count[itVal]; ok && v > 0 {
+			count[itVal] = v + 1
 		} else {
-			count[countKey] = 1
+			count[itVal] = 1
 		}
 	}
 	// compute set values
 	setValue := make([]string, len(count))
-	for keyValue, _ := range count {
+	for keyValue := range count {
 		setValue = append(setValue, keyValue)
 	}
 	return setValue
@@ -389,8 +369,6 @@ func (val ArrayOfString) setOfString() []string {
 func (val ArrayOfInt) setOfInt() []int {
 	var count = make(map[int]int)
 	for _, itVal := range val {
-		//var jsonVal, _ = json.Marshal(itVal)
-		//var countKey = string(jsonVal)
 		if v, ok := count[itVal]; ok && v > 0 {
 			count[itVal] = v + 1
 		} else {
@@ -399,7 +377,7 @@ func (val ArrayOfInt) setOfInt() []int {
 	}
 	// compute set values
 	setValue := make([]int, len(count))
-	for keyValue, _ := range count {
+	for keyValue := range count {
 		setValue = append(setValue, keyValue)
 	}
 	return setValue
@@ -408,8 +386,6 @@ func (val ArrayOfInt) setOfInt() []int {
 func (val ArrayOfFloat) setOfFloat() []float64 {
 	var count = make(map[float64]int)
 	for _, itVal := range val {
-		//var jsonVal, _ = json.Marshal(itVal)
-		//var countKey = string(jsonVal)
 		if v, ok := count[itVal]; ok && v > 0 {
 			count[itVal] = v + 1
 		} else {
@@ -418,103 +394,16 @@ func (val ArrayOfFloat) setOfFloat() []float64 {
 	}
 	// compute set values
 	setValue := make([]float64, len(count))
-	for keyValue, _ := range count {
+	for keyValue := range count {
 		setValue = append(setValue, keyValue)
 	}
 	return setValue
 }
 
 // Collections
-func Map(arr []interface{}, mapFunc func(interface{}) interface{}) []interface{} {
-	var mapResult []interface{}
-	for _, v := range arr {
-		mapResult = append(mapResult, mapFunc(v))
-	}
-	return mapResult
-}
-func MapGen(arr []interface{}, mapFunc func(interface{}) interface{}, mapChan chan<- interface{}) {
-	for _, v := range arr {
-		mapChan <- mapFunc(v)
-	}
-	if mapChan != nil {
-		close(mapChan)
-	}
-}
-
-func MapInt(arr []int, mapFunc func(int) int) []int {
-	var mapResult []int
-	for _, v := range arr {
-		mapResult = append(mapResult, mapFunc(v))
-	}
-	return mapResult
-}
-
-func Filter(arr []interface{}, filterFunc func(interface{}) bool) []interface{} {
-	var mapResult []interface{}
-	for _, v := range arr {
-		if filterFunc(v) {
-			mapResult = append(mapResult, v)
-		}
-	}
-	return mapResult
-}
-
-func FilterGen(arr []interface{}, filterFunc func(interface{}) bool, filterChan chan<- interface{}) {
-	for _, v := range arr {
-		if filterFunc(v) {
-			filterChan <- v
-		}
-	}
-	if filterChan != nil {
-		close(filterChan)
-	}
-
-}
-
-func Take(num uint, arr []interface{}) chan<- interface{} {
-	// use channels to implement generator to send/yield/generate num of values from arr
-	// buffered channel with capacity of number of values to take
-	var takeChannel = make(chan interface{}, num)
-	var cnt uint = 0
-	for _, v := range arr {
-		if cnt == num {
-			break
-		}
-		takeChannel <- v
-		cnt++
-	}
-	close(takeChannel)
-	return takeChannel
-}
-
-func TakeGen(num uint, arr []interface{}, takeChan chan<- interface{}) {
-	// use channels to implement generator to send/yield/generate num of values from arr
-	var cnt uint = 0
-	for _, v := range arr {
-		if cnt == num {
-			break
-		}
-		takeChan <- v
-		cnt++
-	}
-	if takeChan != nil {
-		close(takeChan)
-	}
-}
-
-func NaturalNumbers(count uint) chan<- uint {
-	// use channels to implement generator to send/yield/generate natural numbers
-	// buffered channel with capacity of the count of natural numbers to generate
-	var cntChannel = make(chan uint, count)
-	var cnt uint
-	for cnt = 0; cnt < count; cnt++ {
-		cntChannel <- cnt
-	}
-	close(cntChannel)
-	return cntChannel
-}
 
 // Finite natural numbers generation
+
 func NaturalNumbersGen(count uint, naturalChan chan<- uint) {
 	// use channels to implement generator to yield/generate natural numbers
 	var cnt uint
@@ -527,8 +416,10 @@ func NaturalNumbersGen(count uint, naturalChan chan<- uint) {
 }
 
 // Infinite natural numbers generation
+
 func NaturalNumbersGenInf(naturalChan chan<- uint) {
 	// use channels to implement generator to yield/generate natural numbers
+	// channel may be closed on by the requester
 	for cnt := 0; ; cnt++ {
 		naturalChan <- uint(cnt)
 	}
