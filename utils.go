@@ -17,7 +17,7 @@ import (
 
 func CamelCase(text string, sep string) (string, error) {
 	// validate acceptable separators (" ", "_", "__", ".", "|")
-	sepArr := []interface{}{" ", "_", "__", ".", "|"}
+	sepArr := []string{" ", "_", "__", ".", "|"}
 	if !ArrayContains(sepArr, sep) {
 		textMsg := fmt.Sprintf("missing or unacceptable separator: %v", sep)
 		return text, errors.New(textMsg)

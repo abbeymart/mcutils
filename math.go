@@ -16,14 +16,13 @@ func Fibos(num uint) []uint {
 	return fiboArray
 }
 
-func NaturalNumbers(count uint) chan<- uint {
+func NaturalNumbers(count uint, cntChannel chan<- uint) {
 	// use channels to implement generator to send/yield/generate natural numbers
-	// buffered channel with capacity of the count of natural numbers to generate
-	var cntChannel = make(chan uint, count)
 	var cnt uint
 	for cnt = 0; cnt < count; cnt++ {
 		cntChannel <- cnt
 	}
-	close(cntChannel)
-	return cntChannel
+	if cntChannel != nil {
+		close(cntChannel)
+	}
 }

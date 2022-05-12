@@ -1,6 +1,14 @@
 package mcutils
 
-func Index(arr []interface{}, val interface{}) int {
+type ValueType interface {
+	string | int64 | float64 | bool
+}
+
+type Number interface {
+	int64 | float64
+}
+
+func Index[T ValueType](arr []T, val T) int {
 	// types - string, int, float, bool
 	for i, value := range arr {
 		if value == val {
@@ -10,7 +18,7 @@ func Index(arr []interface{}, val interface{}) int {
 	return -1
 }
 
-func ArrayContains(arr []interface{}, str interface{}) bool {
+func ArrayContains[T ValueType](arr []T, str T) bool {
 	for _, a := range arr {
 		if a == str {
 			return true
@@ -46,7 +54,7 @@ func ArrayFloatContains(arr []float64, str float64) bool {
 	return false
 }
 
-func Any(arr []interface{}, val interface{}) bool {
+func Any[T ValueType](arr []T, val T) bool {
 	for _, value := range arr {
 		if value == val {
 			return true
@@ -55,7 +63,7 @@ func Any(arr []interface{}, val interface{}) bool {
 	return false
 }
 
-func All(arr []interface{}, val interface{}) bool {
+func All[T ValueType](arr []T, val T) bool {
 	for _, value := range arr {
 		if value != val {
 			return true
@@ -64,15 +72,15 @@ func All(arr []interface{}, val interface{}) bool {
 	return false
 }
 
-func Map(arr []interface{}, mapFunc func(interface{}) interface{}) []interface{} {
-	var mapResult []interface{}
+func Map[T ValueType](arr []T, mapFunc func(T) T) []T {
+	var mapResult []T
 	for _, v := range arr {
 		mapResult = append(mapResult, mapFunc(v))
 	}
 	return mapResult
 }
 
-func MapGen(arr []interface{}, mapFunc func(interface{}) interface{}, mapChan chan<- interface{}) {
+func MapGen[T ValueType](arr []T, mapFunc func(T) T, mapChan chan<- T) {
 	for _, v := range arr {
 		mapChan <- mapFunc(v)
 	}
@@ -105,8 +113,8 @@ func MapString(arr []string, mapFunc func(string) string) []string {
 	return mapResult
 }
 
-func Filter(arr []interface{}, filterFunc func(interface{}) bool) []interface{} {
-	var mapResult []interface{}
+func Filter[T ValueType](arr []T, filterFunc func(T) bool) []T {
+	var mapResult []T
 	for _, v := range arr {
 		if filterFunc(v) {
 			mapResult = append(mapResult, v)
@@ -115,7 +123,7 @@ func Filter(arr []interface{}, filterFunc func(interface{}) bool) []interface{} 
 	return mapResult
 }
 
-func FilterGen(arr []interface{}, filterFunc func(interface{}) bool, filterChan chan<- interface{}) {
+func FilterGen[T ValueType](arr []T, filterFunc func(T) bool, filterChan chan<- T) {
 	for _, v := range arr {
 		if filterFunc(v) {
 			filterChan <- v
@@ -127,8 +135,8 @@ func FilterGen(arr []interface{}, filterFunc func(interface{}) bool, filterChan 
 
 }
 
-func Take(num uint, arr []interface{}) []interface{} {
-	var takeResult []interface{}
+func Take[T ValueType](num uint, arr []T) []T {
+	var takeResult []T
 	var cnt uint = 0
 	for _, v := range arr {
 		if cnt == num {
@@ -140,7 +148,7 @@ func Take(num uint, arr []interface{}) []interface{} {
 	return takeResult
 }
 
-func TakeGen(num uint, arr []interface{}, takeChan chan<- interface{}) {
+func TakeGen[T ValueType](num uint, arr []T, takeChan chan<- T) {
 	// use channels to implement generator to send/yield/generate num of values from arr
 	var cnt uint = 0
 	for _, v := range arr {
