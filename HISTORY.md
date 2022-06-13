@@ -2,6 +2,10 @@
 
 - TODO: refactor, add test cases & test | update stat & go-helper functions
 
+## Version 0.1.9
+- Release date: June 12, 2022
+- Added util-methods
+
 ## Version 0.1.8
 - Release date: May 11, 2022
 - Added generic feature
