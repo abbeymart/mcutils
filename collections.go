@@ -27,24 +27,6 @@ func ArrayContains[T ValueType](arr []T, str T) bool {
 	return false
 }
 
-func ArrayStringContains(arr []string, val string) bool {
-	for _, a := range arr {
-		if a == val {
-			return true
-		}
-	}
-	return false
-}
-
-func ArrayIntContains(arr []int, val int) bool {
-	for _, a := range arr {
-		if a == val {
-			return true
-		}
-	}
-	return false
-}
-
 func ArrayFloatContains(arr []float64, str float64) bool {
 	for _, a := range arr {
 		if a == str {
