@@ -1,13 +1,5 @@
 package mcutils
 
-type ValueType interface {
-	string | int64 | float64 | bool
-}
-
-type Number interface {
-	int64 | float64
-}
-
 func Index[T ValueType](arr []T, val T) int {
 	// types - string, int, float, bool
 	for i, value := range arr {
@@ -36,22 +28,22 @@ func ArrayFloatContains(arr []float64, str float64) bool {
 	return false
 }
 
-func Any[T ValueType](arr []T, val T) bool {
+func Any[T ValueType](arr []T, testFunc TestFuncType[T]) bool {
 	for _, value := range arr {
-		if value == val {
+		if testFunc(value) {
 			return true
 		}
 	}
 	return false
 }
 
-func All[T ValueType](arr []T, val T) bool {
+func All[T ValueType](arr []T, testFunc TestFuncType[T]) bool {
 	for _, value := range arr {
-		if value != val {
-			return true
+		if !testFunc(value) {
+			return false
 		}
 	}
-	return false
+	return true
 }
 
 func Map[T ValueType](arr []T, mapFunc func(T) T) []T {
