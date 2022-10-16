@@ -59,3 +59,21 @@ type McObjectIntSlice struct {
 type McObjectInterfaceSlice[T ValueType] struct {
 	value []T
 }
+
+// Collection function types
+
+type IntPredicate func(val int) bool
+type FloatPredicate func(val float64) bool
+type StringPredicate func(val string) bool
+type NumberPredicate[T Number] func(val T) bool
+type Predicate[T ValueType] func(val T) bool
+type BinaryPredicate[T ValueType, U ValueType] func(val1 T, val2 U) bool
+type UnaryOperator[T ValueType] func(val1 T) T
+type BinaryOperator[T ValueType] func(val1 T, val2 T) T
+
+type Function[T ValueType, R ValueType] func(val T) R
+type BiFunction[T ValueType, U ValueType, R ValueType] func(val1 T, val2 U) R
+type Consumer[T ValueType] func(val T)
+type BiConsumer[T ValueType, U ValueType] func(val1 T, val2 U)
+type Supplier[R ValueType] func() R
+type Comparator[T ValueType] func(val1 T, val2 T) int
