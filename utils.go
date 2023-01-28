@@ -5,12 +5,17 @@
 package mcutils
 
 import (
+	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/abbeymart/mcresponse"
 	"github.com/asaskevich/govalidator"
+	"github.com/leekchan/accounting"
+	"golang.org/x/crypto/bcrypt"
+	"log"
+	"math/big"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -325,6 +330,92 @@ func ArrayToSQLStringValues(arr []string) string {
 		}
 	}
 	return result
+}
+
+func AccessAllowed(accessList []string, item string) bool {
+	return ArrayStringContains(accessList, item)
+}
+
+func EncryptPassword(newPassword string, cryptCode string) (string, error) {
+	pwd := []byte(newPassword + cryptCode)
+	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	return string(hash), nil
+}
+
+func ComparePassword(userPassword string, inputPassword string, cryptCode string) (bool, error) {
+	inputPwd := []byte(inputPassword + cryptCode)
+	userPwd := []byte(userPassword)
+	err := bcrypt.CompareHashAndPassword(userPwd, inputPwd)
+	if err != nil {
+		log.Println(err)
+		return false, errors.New(fmt.Sprintf("password comparison error: %v", err.Error()))
+	}
+
+	return true, nil
+}
+
+func ComparePassword2(userPassword string, inputPassword string, cryptCode string) (bool, error) {
+	inputPwd := []byte(inputPassword + cryptCode)
+	newHash, err := bcrypt.GenerateFromPassword(inputPwd, bcrypt.MinCost)
+	if err != nil {
+		log.Println(err)
+		return false, errors.New(fmt.Sprintf("password comparison error: %v", err.Error()))
+	}
+
+	return string(newHash) == userPassword, nil
+}
+
+func GetHashValue(info interface{}, cryptCode string) (string, error) {
+	infoStr := []byte(fmt.Sprintf("%v", info) + cryptCode + "\n")
+	h := sha256.New()
+	_, err := h.Write(infoStr)
+	if err != nil {
+		log.Println(err)
+		return "", errors.New(fmt.Sprintf("hashing / encryption error: %v", err.Error()))
+	}
+
+	res := fmt.Sprintf("%x", h.Sum(nil))
+	return res, nil
+}
+
+func CurrencyNumFormatter(num *big.Float, currency string, precision int) (string, error) {
+	// return '$' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+	//ac := accounting.Accounting{Symbol: "$", Precision: 2}
+	if currency == "" {
+		currency = "$"
+	}
+	if precision < 0 {
+		precision = 0
+	}
+	ac := accounting.Accounting{Symbol: currency, Precision: precision}
+	res := fmt.Sprintf("%v", ac.FormatMoneyBigFloat(num))
+
+	return res, nil
+}
+
+func NumFormatter(num *big.Float, precision int) (string, error) {
+	if precision < 0 {
+		precision = 0
+	}
+	ac := accounting.Accounting{Symbol: "", Precision: precision}
+	res := fmt.Sprintf("%v", ac.FormatMoneyBigFloat(num))
+
+	return res, nil
+}
+
+// JsonDataETL method converts json inputs to equivalent struct data type specification
+// rec must be a pointer to a type matching the jsonRec
+func JsonDataETL(jsonRec []byte, rec interface{}) error {
+	if err := json.Unmarshal(jsonRec, &rec); err == nil {
+		return nil
+	} else {
+		return errors.New(fmt.Sprintf("Error converting json-to-record-format: %v", err.Error()))
+	}
 }
 
 // JsonToStruct converts json inputs to equivalent struct data type specification
