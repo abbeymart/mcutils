@@ -1,8 +1,8 @@
-package collections
+package mcutils
 
 // methods
 
-func (arr *mcutils.McObjectInterfaceSlice[T]) Index(queryVal T) int {
+func (arr *GenericSliceType[T]) Index(queryVal T) int {
 	for i, value := range arr.value {
 		if value == queryVal {
 			return i
@@ -11,7 +11,7 @@ func (arr *mcutils.McObjectInterfaceSlice[T]) Index(queryVal T) int {
 	return -1
 }
 
-func (arr *mcutils.McObjectInterfaceSlice[T]) ArrayContains(queryVal T) bool {
+func (arr *GenericSliceType[T]) ArrayContains(queryVal T) bool {
 	for _, a := range arr.value {
 		if a == queryVal {
 			return true
@@ -20,7 +20,7 @@ func (arr *mcutils.McObjectInterfaceSlice[T]) ArrayContains(queryVal T) bool {
 	return false
 }
 
-func (arr *mcutils.McObjectStringSlice) ArrayStringContains(queryVal string) bool {
+func (arr *StringSliceType) ArrayStringContains(queryVal string) bool {
 	for _, a := range arr.value {
 		if a == queryVal {
 			return true
@@ -29,7 +29,7 @@ func (arr *mcutils.McObjectStringSlice) ArrayStringContains(queryVal string) boo
 	return false
 }
 
-func (arr *mcutils.McObjectIntSlice) ArrayIntContains(queryVal int) bool {
+func (arr *IntSliceType) ArrayIntContains(queryVal int) bool {
 	for _, a := range arr.value {
 		if a == queryVal {
 			return true
@@ -38,7 +38,7 @@ func (arr *mcutils.McObjectIntSlice) ArrayIntContains(queryVal int) bool {
 	return false
 }
 
-func (arr *mcutils.McObjectFloatSlice) ArrayFloatContains(queryVal float64) bool {
+func (arr *FloatSliceType) ArrayFloatContains(queryVal float64) bool {
 	for _, a := range arr.value {
 		if a == queryVal {
 			return true
@@ -47,7 +47,7 @@ func (arr *mcutils.McObjectFloatSlice) ArrayFloatContains(queryVal float64) bool
 	return false
 }
 
-func (arr *mcutils.McObjectInterfaceSlice[T]) Any(testFunc mcutils.TestFuncType[T]) bool {
+func (arr *GenericSliceType[T]) Any(testFunc TestFuncType[T]) bool {
 	for _, value := range arr.value {
 		if testFunc(value) {
 			return true
@@ -56,7 +56,7 @@ func (arr *mcutils.McObjectInterfaceSlice[T]) Any(testFunc mcutils.TestFuncType[
 	return false
 }
 
-func (arr *mcutils.McObjectInterfaceSlice[T]) All(testFunc mcutils.TestFuncType[T]) bool {
+func (arr *GenericSliceType[T]) All(testFunc TestFuncType[T]) bool {
 	for _, value := range arr.value {
 		if !testFunc(value) {
 			return false
@@ -65,7 +65,7 @@ func (arr *mcutils.McObjectInterfaceSlice[T]) All(testFunc mcutils.TestFuncType[
 	return true
 }
 
-func (arr *mcutils.McObjectInterfaceSlice[T]) Map(mapFunc func(T) T) []T {
+func (arr *GenericSliceType[T]) Map(mapFunc func(T) T) []T {
 	var mapResult []T
 	for _, v := range arr.value {
 		mapResult = append(mapResult, mapFunc(v))
@@ -73,7 +73,7 @@ func (arr *mcutils.McObjectInterfaceSlice[T]) Map(mapFunc func(T) T) []T {
 	return mapResult
 }
 
-func (arr *mcutils.McObjectInterfaceSlice[T]) MapGen(mapFunc func(T) T, mapChan chan<- T) {
+func (arr *GenericSliceType[T]) MapGen(mapFunc func(T) T, mapChan chan<- T) {
 	for _, v := range arr.value {
 		mapChan <- mapFunc(v)
 	}
@@ -82,7 +82,7 @@ func (arr *mcutils.McObjectInterfaceSlice[T]) MapGen(mapFunc func(T) T, mapChan 
 	}
 }
 
-func (arr *mcutils.McObjectIntSlice) MapInt(mapFunc func(int) int) []int {
+func (arr *IntSliceType) MapInt(mapFunc func(int) int) []int {
 	var mapResult []int
 	for _, v := range arr.value {
 		mapResult = append(mapResult, mapFunc(v))
@@ -90,7 +90,7 @@ func (arr *mcutils.McObjectIntSlice) MapInt(mapFunc func(int) int) []int {
 	return mapResult
 }
 
-func (arr *mcutils.McObjectFloatSlice) MapFloat(mapFunc func(float64) float64) []float64 {
+func (arr *FloatSliceType) MapFloat(mapFunc func(float64) float64) []float64 {
 	var mapResult []float64
 	for _, v := range arr.value {
 		mapResult = append(mapResult, mapFunc(v))
@@ -98,7 +98,7 @@ func (arr *mcutils.McObjectFloatSlice) MapFloat(mapFunc func(float64) float64) [
 	return mapResult
 }
 
-func (arr *mcutils.McObjectStringSlice) MapString(mapFunc func(string) string) []string {
+func (arr *StringSliceType) MapString(mapFunc func(string) string) []string {
 	var mapResult []string
 	for _, v := range arr.value {
 		mapResult = append(mapResult, mapFunc(v))
@@ -106,7 +106,7 @@ func (arr *mcutils.McObjectStringSlice) MapString(mapFunc func(string) string) [
 	return mapResult
 }
 
-func (arr *mcutils.McObjectInterfaceSlice[T]) Filter(filterFunc func(T) bool) []T {
+func (arr *GenericSliceType[T]) Filter(filterFunc func(T) bool) []T {
 	var mapResult []T
 	for _, v := range arr.value {
 		if filterFunc(v) {
@@ -116,7 +116,7 @@ func (arr *mcutils.McObjectInterfaceSlice[T]) Filter(filterFunc func(T) bool) []
 	return mapResult
 }
 
-func (arr *mcutils.McObjectInterfaceSlice[T]) FilterGen(filterFunc func(T) bool, filterChan chan<- T) {
+func (arr *GenericSliceType[T]) FilterGen(filterFunc func(T) bool, filterChan chan<- T) {
 	for _, v := range arr.value {
 		if filterFunc(v) {
 			filterChan <- v
@@ -128,7 +128,7 @@ func (arr *mcutils.McObjectInterfaceSlice[T]) FilterGen(filterFunc func(T) bool,
 
 }
 
-func (arr *mcutils.McObjectInterfaceSlice[T]) Take(num uint) []T {
+func (arr *GenericSliceType[T]) Take(num uint) []T {
 	var takeResult []T
 	var cnt uint = 0
 	for _, v := range arr.value {
@@ -141,7 +141,7 @@ func (arr *mcutils.McObjectInterfaceSlice[T]) Take(num uint) []T {
 	return takeResult
 }
 
-func (arr *mcutils.McObjectInterfaceSlice[T]) TakeGen(num uint, takeChan chan<- T) {
+func (arr *GenericSliceType[T]) TakeGen(num uint, takeChan chan<- T) {
 	// use channels to implement generator to send/yield/generate num of values from arr
 	var cnt uint = 0
 	for _, v := range arr.value {

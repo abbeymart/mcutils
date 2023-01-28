@@ -2,7 +2,7 @@
 // @Company: mConnect.biz | @License: MIT
 // @Description: statistical functions
 
-package stats
+package mcutils
 
 import (
 	"math"

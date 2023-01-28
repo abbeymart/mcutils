@@ -2,7 +2,7 @@
 // @Company: mConnect.biz | @License: MIT
 // @Description: mConnect shared utility functions
 
-package utils
+package mcutils
 
 import (
 	"encoding/base64"
@@ -10,10 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/abbeymart/mcresponse"
-	"github.com/abbeymart/mcutils"
-	"github.com/abbeymart/mcutils/collections"
 	"github.com/asaskevich/govalidator"
-	"math"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -23,8 +20,8 @@ import (
 
 func CamelCase(text string, sep string) (string, error) {
 	// validate acceptable separators (" ", "_", "__", ".", "|")
-	sepArr := mcutils.PermittedSeparators
-	if !collections.ArrayContains(sepArr, sep) {
+	sepArr := PermittedSeparators
+	if !ArrayContains(sepArr, sep) {
 		textMsg := fmt.Sprintf("missing or unacceptable separator: %v", sep)
 		return text, errors.New(textMsg)
 	}
@@ -46,7 +43,7 @@ func CamelCase(text string, sep string) (string, error) {
 
 func PascalCase(text string, sep string) (string, error) {
 	// validate acceptable separators (" ", "_", "__", ".", "|")
-	sepArr := mcutils.PermittedSeparators
+	sepArr := PermittedSeparators
 	if !ArrayStringContains(sepArr, sep) {
 		textMsg := fmt.Sprintf("missing or unacceptable separator: %v | Acceptable-separators: %v", sep, strings.Join(sepArr, ", "))
 		return text, errors.New(textMsg)
@@ -71,7 +68,7 @@ func LeapYear(year int) bool {
 
 func GetLanguage(userLang string) string {
 	// Define/set default language variable
-	var defaultLang = mcutils.DefaultLanguage
+	var defaultLang = DefaultLanguage
 	// Set defaultLang to current userLang, set from the UI
 	if userLang != "" {
 		defaultLang = userLang
@@ -79,13 +76,13 @@ func GetLanguage(userLang string) string {
 	return defaultLang
 }
 
-func getLocale(localeFiles mcutils.Locale, options mcutils.LocaleOptions) mcutils.LocaleContent {
+func getLocale(localeFiles Locale, options LocaleOptions) LocaleContent {
 	// localeType := options.LocaleType
 	var language string
 	if lang := options.Language; lang != "" {
 		language = lang
 	} else {
-		language = mcutils.DefaultLanguage
+		language = DefaultLanguage
 	}
 	// set the locale file contents
 	myLocale := localeFiles[language]
@@ -112,103 +109,6 @@ func StringToBool(val string) bool {
 	} else {
 		return false
 	}
-}
-
-func FactorialTail(num uint, acc uint) uint {
-	acc = 1
-	if num <= 1 {
-		return acc
-	}
-	// using the tail call optimization
-	return FactorialTail(num-1, num*acc)
-}
-
-func FactNumGen(num uint) chan uint {
-	var factRes = make(chan uint, num)
-	var x uint
-	for x = 1; x <= num; x++ {
-		factRes <- x
-	}
-	return factRes
-}
-
-func FactorialGen(num uint) uint {
-	// using the generator function, via channel, no recursion
-	var result uint = 1
-	for v := range FactNumGen(num) {
-		result *= v
-	}
-	return result
-}
-
-func FactorialGen2(num uint) uint {
-	// using number-series, no recursion
-	var result uint = 1
-	var v uint
-	for v = 1; v < num+1; v++ {
-		result *= v
-	}
-	return result
-}
-
-func FiboTail(n int, current int, next int) int {
-	if n == 0 {
-		return current
-	}
-	// using the tail call optimization
-	return FiboTail(n-1, current, current+next)
-}
-
-func FiboArray(num uint) [][]uint {
-	// no recursion, memoization using array
-	var c, d uint = 0, 1
-	var result [][]uint
-	var fibRes uint = 0 // track current fibo-value
-	for i := 0; i < int(num); i++ {
-		c, d = d, c+d
-		result = append(result, []uint{c, d})
-		fibRes = c
-	}
-	fmt.Printf("fib-result: %v", fibRes)
-	return result
-}
-
-func FiboSeries(num uint) chan<- uint {
-	// initial pairs / values
-	var fiboChannel = make(chan uint, num) // buffered channel
-	var a, b uint = 0, 1
-	var i uint = 0
-	for i < num {
-		fiboChannel <- b
-		a, b = b, a+b
-		i++
-	}
-	return fiboChannel
-}
-
-func PrimeNumbers(num int) (pNums []int) {
-next:
-	for outer := 2; outer < num; outer++ {
-		for inner := 2; inner < outer; inner++ {
-			if outer%inner == 0 {
-				continue next
-			}
-			pNums = append(pNums, outer)
-		}
-	}
-	return pNums
-}
-
-func IsPrime(n int) bool {
-	// prime number count algorithm condition
-	s := math.Floor(math.Sqrt(float64(n)))
-	for x := 2; x <= int(s); x++ {
-		//Perform remainder of n for all numbers from 2 to s(short-algorithm-value)/n-1
-		if n%x == 0 {
-			return false
-		}
-	}
-	return n > 1
 }
 
 func ReverseArray(arr []interface{}) []interface{} {
@@ -252,35 +152,6 @@ func ReverseArrayIntGen(arr []int, arrChan chan int) {
 func ReverseArrayFloatGen(arr []float64, arrChan chan float64) {
 	for i := len(arr) - 1; i >= 0; i-- {
 		arrChan <- arr[i]
-	}
-}
-
-func Pythagoras(limit uint) [][]uint {
-	var pResult [][]uint
-	var a, b uint
-	for a = 1; a <= limit; a++ {
-		for b = a; b <= limit; b++ {
-			itemSqrt := math.Sqrt(float64(a*a + b*b))
-			if uint(itemSqrt)%1.00 == 0 || uint(itemSqrt)%1.00 == 0.00 {
-				pResult = append(pResult, []uint{a, b, uint(itemSqrt)})
-			}
-		}
-	}
-	return pResult
-}
-
-func PythagorasGen(limit uint, pythagorasChan chan []uint) {
-	var a, b uint
-	for a = 1; a <= limit; a++ {
-		for b = a; b <= limit; b++ {
-			itemSqrt := math.Sqrt(float64(a*a + b*b))
-			if uint(itemSqrt)%1.00 == 0 || uint(itemSqrt)%1.00 == 0.00 {
-				pythagorasChan <- []uint{a, b, uint(itemSqrt)}
-			}
-		}
-	}
-	if pythagorasChan != nil {
-		close(pythagorasChan)
 	}
 }
 
@@ -382,29 +253,6 @@ func (val ArrayOfFloat) setOfFloat() []float64 {
 }
 
 // Collections
-
-// Finite natural numbers generation
-
-func NaturalNumbersGen(count uint, naturalChan chan<- uint) {
-	// use channels to implement generator to yield/generate natural numbers
-	var cnt uint
-	for cnt = 0; cnt < count; cnt++ {
-		naturalChan <- cnt
-	}
-	if naturalChan != nil {
-		close(naturalChan)
-	}
-}
-
-// Infinite natural numbers generation
-
-func NaturalNumbersGenInf(naturalChan chan<- uint) {
-	// use channels to implement generator to yield/generate natural numbers
-	// channel may be closed on by the requester
-	for cnt := 0; ; cnt++ {
-		naturalChan <- uint(cnt)
-	}
-}
 
 type EmailUserNameType struct {
 	Email    string
@@ -768,7 +616,7 @@ func MapToStruct(mapRecord map[string]interface{}, rec interface{}) (interface{}
 }
 
 // GetParamsMessage compose the message-object into mcresponse.ResponseMessage
-func GetParamsMessage(msgObject mcutils.MessageObject) mcresponse.ResponseMessage {
+func GetParamsMessage(msgObject MessageObject) mcresponse.ResponseMessage {
 	var messages = ""
 
 	for key, val := range msgObject {

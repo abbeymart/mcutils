@@ -29,37 +29,6 @@ type TestFuncType[T ValueType] func(val T) bool
 
 // types
 
-type McObjectString struct {
-	value string
-}
-type McObjectFloat struct {
-	value float64
-}
-type McObjectBool struct {
-	value bool
-}
-type McObjectInt struct {
-	value int
-}
-type McObjectInterface[T ValueType] struct {
-	value T
-}
-type McObjectStringSlice struct {
-	value []string
-}
-type McObjectFloatSlice struct {
-	value []float64
-}
-type McObjectBoolSlice struct {
-	value []bool
-}
-type McObjectIntSlice struct {
-	value []int
-}
-type McObjectInterfaceSlice[T ValueType] struct {
-	value []T
-}
-
 var PermittedSeparators = []string{" ", "_", "__", ".", "|"}
 
 // Collection function types
@@ -79,3 +48,34 @@ type Consumer[T ValueType] func(val T)
 type BiConsumer[T ValueType, U ValueType] func(val1 T, val2 U)
 type Supplier[R ValueType] func() R
 type Comparator[T ValueType] func(val1 T, val2 T) int
+
+type StringType struct {
+	value string
+}
+type FloatType struct {
+	value float64
+}
+type BoolType struct {
+	value bool
+}
+type IntType struct {
+	value int
+}
+type GenericType[T ValueType] struct {
+	value T
+}
+type StringSliceType struct {
+	value []string
+}
+type FloatSliceType struct {
+	value []float64
+}
+type BoolSliceType struct {
+	value []bool
+}
+type IntSliceType struct {
+	value []int
+}
+type GenericSliceType[T ValueType] struct {
+	value []T
+}

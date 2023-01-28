@@ -2,7 +2,7 @@
 // @Company: mConnect.biz | @License: MIT
 // @Description: mConnect go-helper functions
 
-package utils
+package mcutils
 
 import (
 	"fmt"

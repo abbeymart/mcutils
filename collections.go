@@ -1,8 +1,6 @@
-package collections
+package mcutils
 
-import "github.com/abbeymart/mcutils"
-
-func Index[T mcutils.ValueType](arr []T, val T) int {
+func Index[T ValueType](arr []T, val T) int {
 	// types - string, int, float, bool
 	for i, value := range arr {
 		if value == val {
@@ -12,7 +10,7 @@ func Index[T mcutils.ValueType](arr []T, val T) int {
 	return -1
 }
 
-func ArrayContains[T mcutils.ValueType](arr []T, str T) bool {
+func ArrayContains[T ValueType](arr []T, str T) bool {
 	for _, a := range arr {
 		if a == str {
 			return true
@@ -30,7 +28,7 @@ func ArrayFloatContains(arr []float64, str float64) bool {
 	return false
 }
 
-func Any[T mcutils.ValueType](arr []T, testFunc mcutils.TestFuncType[T]) bool {
+func Any[T ValueType](arr []T, testFunc TestFuncType[T]) bool {
 	for _, value := range arr {
 		if testFunc(value) {
 			return true
@@ -39,7 +37,7 @@ func Any[T mcutils.ValueType](arr []T, testFunc mcutils.TestFuncType[T]) bool {
 	return false
 }
 
-func All[T mcutils.ValueType](arr []T, testFunc mcutils.TestFuncType[T]) bool {
+func All[T ValueType](arr []T, testFunc TestFuncType[T]) bool {
 	for _, value := range arr {
 		if !testFunc(value) {
 			return false
@@ -48,7 +46,7 @@ func All[T mcutils.ValueType](arr []T, testFunc mcutils.TestFuncType[T]) bool {
 	return true
 }
 
-func Map[T mcutils.ValueType](arr []T, mapFunc func(T) T) []T {
+func Map[T ValueType](arr []T, mapFunc func(T) T) []T {
 	var mapResult []T
 	for _, v := range arr {
 		mapResult = append(mapResult, mapFunc(v))
@@ -56,7 +54,7 @@ func Map[T mcutils.ValueType](arr []T, mapFunc func(T) T) []T {
 	return mapResult
 }
 
-func MapGen[T mcutils.ValueType](arr []T, mapFunc func(T) T, mapChan chan<- T) {
+func MapGen[T ValueType](arr []T, mapFunc func(T) T, mapChan chan<- T) {
 	for _, v := range arr {
 		mapChan <- mapFunc(v)
 	}
@@ -89,7 +87,7 @@ func MapString(arr []string, mapFunc func(string) string) []string {
 	return mapResult
 }
 
-func Filter[T mcutils.ValueType](arr []T, filterFunc func(T) bool) []T {
+func Filter[T ValueType](arr []T, filterFunc func(T) bool) []T {
 	var mapResult []T
 	for _, v := range arr {
 		if filterFunc(v) {
@@ -99,7 +97,7 @@ func Filter[T mcutils.ValueType](arr []T, filterFunc func(T) bool) []T {
 	return mapResult
 }
 
-func FilterGen[T mcutils.ValueType](arr []T, filterFunc func(T) bool, filterChan chan<- T) {
+func FilterGen[T ValueType](arr []T, filterFunc func(T) bool, filterChan chan<- T) {
 	for _, v := range arr {
 		if filterFunc(v) {
 			filterChan <- v
@@ -111,7 +109,7 @@ func FilterGen[T mcutils.ValueType](arr []T, filterFunc func(T) bool, filterChan
 
 }
 
-func Take[T mcutils.ValueType](num uint, arr []T) []T {
+func Take[T ValueType](num uint, arr []T) []T {
 	var takeResult []T
 	var cnt uint = 0
 	for _, v := range arr {
@@ -124,7 +122,7 @@ func Take[T mcutils.ValueType](num uint, arr []T) []T {
 	return takeResult
 }
 
-func TakeGen[T mcutils.ValueType](num uint, arr []T, takeChan chan<- T) {
+func TakeGen[T ValueType](num uint, arr []T, takeChan chan<- T) {
 	// use channels to implement generator to send/yield/generate num of values from arr
 	var cnt uint = 0
 	for _, v := range arr {

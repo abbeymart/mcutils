@@ -32,11 +32,10 @@ func TestStat(t *testing.T) {
 		Name: "should return success code for success-message",
 		TestFunc: func() {
 			req := mcresponse.GetResMessage(msgType, options)
-			mctest.AssertEquals(t, req.Code, res.Code, "response-code should be: " + res.Code)
+			mctest.AssertEquals(t, req.Code, res.Code, "response-code should be: "+res.Code)
 			mctest.AssertEquals(t, req.Message, res.Message, "response-message should be: "+res.Message)
 		},
 	})
 
 	mctest.PostTestResult()
 }
-
