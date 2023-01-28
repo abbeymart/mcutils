@@ -60,6 +60,8 @@ type McObjectInterfaceSlice[T ValueType] struct {
 	value []T
 }
 
+var PermittedSeparators = []string{" ", "_", "__", ".", "|"}
+
 // Collection function types
 
 type IntPredicate func(val int) bool
