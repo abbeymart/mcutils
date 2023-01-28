@@ -18,17 +18,17 @@ import (
 	"math/big"
 	"math/rand"
 	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
 )
 
-func CamelCase(text string, sep string) (string, error) {
-	// validate acceptable separators (" ", "_", "__", ".", "|")
+func SeparatorFieldToCamelCase(text string, sep string) (string, error) {
+	// validate acceptable separators [" ", "_", "__", ".", "|"]
 	sepArr := PermittedSeparators
 	if !ArrayContains(sepArr, sep) {
-		textMsg := fmt.Sprintf("missing or unacceptable separator: %v", sep)
-		return text, errors.New(textMsg)
+		return text, errors.New(fmt.Sprintf("missing or unacceptable separator: %v | Acceptable-separators: %v", sep, strings.Join(sepArr, ", ")))
 	}
 	// split text by separator/sep
 	textArray := strings.Split(text, sep)
@@ -38,32 +38,50 @@ func CamelCase(text string, sep string) (string, error) {
 	remainingWords := textArray[1:]
 	var otherWords string
 	for _, v := range remainingWords {
-		firstLetterUpper := strings.ToUpper(string(v[0]))
-		remainLetterLower := strings.ToLower(v[1:])
-		otherWords += firstLetterUpper + remainLetterLower
+		// transform first letter to upper case and other letters to lowercase
+		otherWords += strings.ToUpper(string(v[0])) + strings.ToLower(v[1:])
 	}
 
 	return fmt.Sprintf("%v%v", firstWord, otherWords), nil
 }
 
-func PascalCase(text string, sep string) (string, error) {
-	// validate acceptable separators (" ", "_", "__", ".", "|")
+func SeparatorFieldToPascalCase(text string, sep string) (string, error) {
+	// validate acceptable separators [" ", "_", "__", ".", "|"]
 	sepArr := PermittedSeparators
 	if !ArrayStringContains(sepArr, sep) {
-		textMsg := fmt.Sprintf("missing or unacceptable separator: %v | Acceptable-separators: %v", sep, strings.Join(sepArr, ", "))
-		return text, errors.New(textMsg)
+		return text, errors.New(fmt.Sprintf("missing or unacceptable separator: %v | Acceptable-separators: %v", sep, strings.Join(sepArr, ", ")))
 	}
 	// split text by separator/sep
 	textArray := strings.Split(text, sep)
-	// convert all words: first letter to upper case and other letters to lowercase
+	// convert all words: transform first letter to upper case and other letters to lowercase
 	var allWords string
 	for _, v := range textArray {
-		firstLetterUpper := strings.ToUpper(string(v[0]))
-		remainLetterLower := strings.ToLower(v[1:])
-		allWords += firstLetterUpper + remainLetterLower
+		// transform first letter to upper case and other letters to lowercase
+		allWords += strings.ToUpper(string(v[0])) + strings.ToLower(v[1:])
 	}
 
 	return fmt.Sprintf("%v", allWords), nil
+}
+
+// CaseFieldToUnderscore transform camelCase or PascalCase field-value to underscore field value
+func CaseFieldToUnderscore(caseString string) string {
+	// Create slice of words from the cased-value, separate at Uppercase-character
+	re := regexp.MustCompile(`[A-Z][^A-Z]*`)
+	// transform first character to Uppercase
+	caseValue := strings.ToUpper(string(caseString[0])) + caseString[1:]
+	// compose separate/matched words as slice
+	textArray := re.FindAllString(caseValue, -1)
+	var wordsArray []string
+	for _, v := range textArray {
+		wordsArray = append(wordsArray, strings.ToLower(v))
+	}
+	if len(wordsArray) < 1 {
+		return ""
+	}
+	if len(wordsArray) == 1 {
+		return wordsArray[0]
+	}
+	return strings.Join(wordsArray, "_")
 }
 
 func LeapYear(year int) bool {
