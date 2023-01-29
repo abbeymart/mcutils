@@ -264,7 +264,8 @@ func (val SliceObjectType[T]) SliceObjectCounter() ObjectCounterResult[T] {
 	return count
 }
 
-func (val ArrayValue[T]) set() []T {
+// Set method returns the slice of set values for a generic type T
+func (val ArrayValue[T]) Set() []T {
 	// refactor, using counter method
 	var count = val.Counter()
 	// compute set values
@@ -275,7 +276,7 @@ func (val ArrayValue[T]) set() []T {
 	return setValue
 }
 
-func (val ArrayOfString) setOfString() []string {
+func (val ArrayOfString) SetOfString() []string {
 	var count = make(map[string]int)
 	for _, itVal := range val {
 		if v, ok := count[itVal]; ok && v > 0 {
@@ -292,7 +293,7 @@ func (val ArrayOfString) setOfString() []string {
 	return setValue
 }
 
-func (val ArrayOfInt) setOfInt() []int {
+func (val ArrayOfInt) SetOfInt() []int {
 	var count = make(map[int]int)
 	for _, itVal := range val {
 		if v, ok := count[itVal]; ok && v > 0 {
@@ -309,7 +310,7 @@ func (val ArrayOfInt) setOfInt() []int {
 	return setValue
 }
 
-func (val ArrayOfFloat) setOfFloat() []float64 {
+func (val ArrayOfFloat) SetOfFloat() []float64 {
 	var count = make(map[float64]int)
 	for _, itVal := range val {
 		if v, ok := count[itVal]; ok && v > 0 {
@@ -369,26 +370,6 @@ func ParseRawValues(rawValues [][]byte) ([]interface{}, error) {
 	return values, nil
 }
 
-// ArrayStringContains check if a slice of string contains/includes a string value
-func ArrayStringContains(arr []string, val string) bool {
-	for _, a := range arr {
-		if strings.ToLower(a) == strings.ToLower(val) {
-			return true
-		}
-	}
-	return false
-}
-
-// ArrayIntContains check if a slice of int contains/includes an int value
-func ArrayIntContains(arr []int, val int) bool {
-	for _, a := range arr {
-		if a == val {
-			return true
-		}
-	}
-	return false
-}
-
 // ArrayToSQLStringValues transforms a slice of string to SQL-string-formatted-values
 func ArrayToSQLStringValues(arr []string) string {
 	result := ""
@@ -402,7 +383,7 @@ func ArrayToSQLStringValues(arr []string) string {
 }
 
 func AccessAllowed(accessList []string, item string) bool {
-	return ArrayStringContains(accessList, item)
+	return ArrayContains(accessList, item)
 }
 
 func EncryptPassword(newPassword string, cryptCode string) (string, error) {

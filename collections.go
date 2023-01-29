@@ -1,6 +1,23 @@
 package mcutils
 
+import (
+	"fmt"
+	"strings"
+)
+
+// Index functions returns the index of the specified value (for string, it's case-insensitive)
 func Index[T ValueType](arr []T, val T) int {
+	// types - string, int, float, bool
+	for i, value := range arr {
+		if value == val || strings.ToLower(fmt.Sprintf("%v", value)) == strings.ToLower(fmt.Sprintf("%v", val)) {
+			return i
+		}
+	}
+	return -1
+}
+
+// IndexCaseSensitive functions returns the index of the specified value (for string, it's case-sensitive)
+func IndexCaseSensitive[T ValueType](arr []T, val T) int {
 	// types - string, int, float, bool
 	for i, value := range arr {
 		if value == val {
@@ -10,7 +27,18 @@ func Index[T ValueType](arr []T, val T) int {
 	return -1
 }
 
+// ArrayContains check if a slice of generic type T contains/includes a value of type T  (for string, it's case-insensitive)
 func ArrayContains[T ValueType](arr []T, str T) bool {
+	for _, a := range arr {
+		if a == str || strings.ToLower(fmt.Sprintf("%v", a)) == strings.ToLower(fmt.Sprintf("%v", str)) {
+			return true
+		}
+	}
+	return false
+}
+
+// ArrayContainsCaseSensitive check if a slice of generic type T contains/includes a value of type T  (for string, it's case-sensitive)
+func ArrayContainsCaseSensitive[T ValueType](arr []T, str T) bool {
 	for _, a := range arr {
 		if a == str {
 			return true
@@ -19,6 +47,37 @@ func ArrayContains[T ValueType](arr []T, str T) bool {
 	return false
 }
 
+// ArrayStringContains check if a slice of string contains/includes a string value, case-insensitive
+func ArrayStringContains(arr []string, val string) bool {
+	for _, a := range arr {
+		if strings.ToLower(a) == strings.ToLower(val) {
+			return true
+		}
+	}
+	return false
+}
+
+// ArrayStringContainsCaseSensitive check if a slice of string contains/includes a string value, case-sensitive
+func ArrayStringContainsCaseSensitive(arr []string, val string) bool {
+	for _, a := range arr {
+		if a == val {
+			return true
+		}
+	}
+	return false
+}
+
+// ArrayIntContains check if a slice of int contains/includes an int value
+func ArrayIntContains(arr []int, val int) bool {
+	for _, a := range arr {
+		if a == val {
+			return true
+		}
+	}
+	return false
+}
+
+// ArrayFloatContains check if a slice of int contains/includes a float value
 func ArrayFloatContains(arr []float64, str float64) bool {
 	for _, a := range arr {
 		if a == str {
