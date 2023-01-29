@@ -21,6 +21,10 @@ type ValueType interface {
 	string | int64 | float64 | bool
 }
 
+type ValueTypeSlice interface {
+	[]string | []int64 | []float64 | []bool | []map[string]interface{}
+}
+
 type Number interface {
 	int64 | float64
 }

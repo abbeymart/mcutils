@@ -24,11 +24,12 @@ import (
 	"time"
 )
 
+// SeparatorFieldToCamelCase transforms a separated/underscore name to camel-case name
 func SeparatorFieldToCamelCase(text string, sep string) (string, error) {
 	// validate acceptable separators [" ", "_", "__", ".", "|"]
 	sepArr := PermittedSeparators
 	if !ArrayContains(sepArr, sep) {
-		return text, errors.New(fmt.Sprintf("missing or unacceptable separator: %v | Acceptable-separators: %v", sep, strings.Join(sepArr, ", ")))
+		return "", errors.New(fmt.Sprintf("missing or unacceptable separator: %v | Acceptable-separators: %v", sep, strings.Join(sepArr, ", ")))
 	}
 	// split text by separator/sep
 	textArray := strings.Split(text, sep)
@@ -45,11 +46,12 @@ func SeparatorFieldToCamelCase(text string, sep string) (string, error) {
 	return fmt.Sprintf("%v%v", firstWord, otherWords), nil
 }
 
+// SeparatorFieldToPascalCase transforms a separated/underscore field-name to pascal-case
 func SeparatorFieldToPascalCase(text string, sep string) (string, error) {
 	// validate acceptable separators [" ", "_", "__", ".", "|"]
 	sepArr := PermittedSeparators
-	if !ArrayStringContains(sepArr, sep) {
-		return text, errors.New(fmt.Sprintf("missing or unacceptable separator: %v | Acceptable-separators: %v", sep, strings.Join(sepArr, ", ")))
+	if !ArrayContains(sepArr, sep) {
+		return "", errors.New(fmt.Sprintf("missing or unacceptable separator: %v | Acceptable-separators: %v", sep, strings.Join(sepArr, ", ")))
 	}
 	// split text by separator/sep
 	textArray := strings.Split(text, sep)
@@ -63,7 +65,7 @@ func SeparatorFieldToPascalCase(text string, sep string) (string, error) {
 	return fmt.Sprintf("%v", allWords), nil
 }
 
-// CaseFieldToUnderscore transform camelCase or PascalCase field-value to underscore field value
+// CaseFieldToUnderscore transforms camelCase or PascalCase name to underscore name
 func CaseFieldToUnderscore(caseString string) string {
 	// Create slice of words from the cased-value, separate at Uppercase-character
 	re := regexp.MustCompile(`[A-Z][^A-Z]*`)
@@ -84,11 +86,13 @@ func CaseFieldToUnderscore(caseString string) string {
 	return strings.Join(wordsArray, "_")
 }
 
-func LeapYear(year int) bool {
+// IsLeapYear determines if a given year is a leap year
+func IsLeapYear(year int) bool {
 	// by setting the day to the 29th and checking if the day remains
 	return year%400 == 0 || (year%4 == 0 && year%100 != 0) || time.Date(year, time.February, 29, 23, 0, 0, 0, time.UTC).Day() == 29
 }
 
+// GetLanguage returns the specified user-language or defaultLanguage as default
 func GetLanguage(userLang string) string {
 	// Define/set default language variable
 	var defaultLang = DefaultLanguage
@@ -99,7 +103,8 @@ func GetLanguage(userLang string) string {
 	return defaultLang
 }
 
-func getLocale(localeFiles Locale, options LocaleOptions) LocaleContent {
+// GetLocale function returns the locale for the specified language
+func GetLocale(localeFiles Locale, options LocaleOptions) LocaleContent {
 	// localeType := options.LocaleType
 	var language string
 	if lang := options.Language; lang != "" {
@@ -112,18 +117,21 @@ func getLocale(localeFiles Locale, options LocaleOptions) LocaleContent {
 	return myLocale
 }
 
+// ShortString returns part of string, based on the specified maxLength
 func ShortString(str string, maxLength uint) string {
 	if len(str) > int(maxLength) {
 		// return slice of the string, up to/including the maxLength, and append "..."
 		return str[:int(maxLength)+1] + "..."
 	}
-	// return whole string
+	// return whole string, if len(str) <= maxLength
 	return str
 }
 
+// StringToBool returns the boolean value of the specified string-value
 func StringToBool(val string) bool {
-	// convert val to lowercase
+	// convert val to lowercase and trim any trailing whitespaces
 	strVal := strings.ToLower(val)
+	strVal = strings.Trim(strVal, " ")
 	// perform the conversion
 	if strVal == "true" || strVal == "t" || strVal == "yes" || strVal == "y" {
 		return true
@@ -134,7 +142,18 @@ func StringToBool(val string) bool {
 	}
 }
 
-func ReverseArray(arr []interface{}) []interface{} {
+// ReverseArray returns the reverse values of the specified array/slice [generic type]
+func ReverseArray[T ValueType](arr []T) []T {
+	// arr and arrChan must be of the same type: int, float
+	var reverseArray []T
+	for i := len(arr) - 1; i >= 0; i-- {
+		reverseArray = append(reverseArray, arr[i])
+	}
+	return reverseArray
+}
+
+// ReverseArray1 returns the reverse values of the specified array/slice, DEPRECATED - use ReverseArray
+func ReverseArray1(arr []interface{}) []interface{} {
 	// arr and arrChan must be of the same type: int, float
 	var reverseArray []interface{}
 	for i := len(arr) - 1; i >= 0; i-- {
@@ -159,6 +178,15 @@ func ReverseArrayFloat(arr []float64) []float64 {
 	return reverseArray
 }
 
+// ReverseArrayGenerator sequentially generates reverse values of the specified array/slice
+func ReverseArrayGenerator[T ValueType](arr []T, arrChan chan T) {
+	// arr and arrChan must be of the same type: int, float
+	for i := len(arr) - 1; i >= 0; i-- {
+		arrChan <- arr[i]
+	}
+}
+
+// ReverseArrayGen sequentially generates reverse values of the specified array/slice - DEPRECATED - use // ReverseArrayGeneratorGeneric
 func ReverseArrayGen(arr []interface{}, arrChan chan interface{}) {
 	// arr and arrChan must be of the same type: int, float
 	for i := len(arr) - 1; i >= 0; i-- {
@@ -180,46 +208,69 @@ func ReverseArrayFloatGen(arr []float64, arrChan chan float64) {
 
 // counters
 
-type ArrayValue []interface{}
+type CounterValue[T ValueType | map[string]interface{}] struct {
+	Count int
+	Value T
+}
+type ArrayValue[T ValueType] []T
 type ArrayOfString []string
 type ArrayOfInt []int
 type ArrayOfFloat []float64
 type DataCount map[string]int
+type SliceObjectType[T map[string]interface{}] []T
+type CounterResult[T ValueType] map[string]CounterValue[T]
+type ObjectCounterResult[T map[string]interface{}] map[string]CounterValue[T]
 
-func (val ArrayValue) counterGeneric() map[interface{}]int {
-	var count = make(map[interface{}]int)
+// Counter method returns the unique counts of the specified array/slice values[int, float, string and bool]
+func (val ArrayValue[T]) Counter() CounterResult[T] {
+	var count = make(CounterResult[T])
 	for _, it := range val {
-		if v, ok := count[it]; ok && v > 0 {
-			count[it] = v + 1
+		// stringify it=>key
+		var itStr = fmt.Sprintf("%v", it)
+		if v, ok := count[itStr]; ok && v.Count > 0 {
+			count[itStr] = CounterValue[T]{
+				Count: v.Count + 1,
+				Value: it,
+			}
 		} else {
-			count[it] = 1
+			count[itStr] = CounterValue[T]{
+				Count: 1,
+				Value: it,
+			}
 		}
 	}
 	return count
 }
 
-func (val ArrayValue) counter() DataCount {
-	var count = make(map[string]int)
+// SliceObjectCounter method returns the unique counts of the specified array/slice of map[string]interface{} values
+func (val SliceObjectType[T]) SliceObjectCounter() ObjectCounterResult[T] {
+	var count ObjectCounterResult[T]
 	for _, it := range val {
-		// stringify it=>keys
-		var jsonVal, _ = json.Marshal(it)
-		var countKey = string(jsonVal)
-		if v, ok := count[countKey]; ok && v > 0 {
-			count[countKey] = v + 1
+		// stringify it=>key
+		jsonVal, _ := json.Marshal(it)
+		var itStr = string(jsonVal)
+		if v, ok := count[itStr]; ok && v.Count > 0 {
+			count[itStr] = CounterValue[T]{
+				Count: v.Count + 1,
+				Value: it,
+			}
 		} else {
-			count[countKey] = 1
+			count[itStr] = CounterValue[T]{
+				Count: 1,
+				Value: it,
+			}
 		}
 	}
 	return count
 }
 
-func (val ArrayValue) set() []string {
+func (val ArrayValue[T]) set() []T {
 	// refactor, using counter method
-	var count = val.counter()
+	var count = val.Counter()
 	// compute set values
-	setValue := make([]string, len(count))
-	for keyValue := range count {
-		setValue = append(setValue, keyValue)
+	setValue := make([]T, len(count))
+	for _, value := range count {
+		setValue = append(setValue, value.Value)
 	}
 	return setValue
 }
