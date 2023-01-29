@@ -433,6 +433,7 @@ func GetHashValue(info interface{}, cryptCode string) (string, error) {
 	return res, nil
 }
 
+// CurrencyNumFormatter format a number value based on the specified currency and precision
 func CurrencyNumFormatter(num *big.Float, currency string, precision int) (string, error) {
 	// return '$' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 	//ac := accounting.Accounting{Symbol: "$", Precision: 2}
@@ -448,6 +449,7 @@ func CurrencyNumFormatter(num *big.Float, currency string, precision int) (strin
 	return res, nil
 }
 
+// NumFormatter format a number value based on the specified precision
 func NumFormatter(num *big.Float, precision int) (string, error) {
 	if precision < 0 {
 		precision = 0
