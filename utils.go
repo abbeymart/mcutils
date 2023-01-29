@@ -11,7 +11,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/abbeymart/mcresponse"
-	"github.com/asaskevich/govalidator"
 	"github.com/leekchan/accounting"
 	"golang.org/x/crypto/bcrypt"
 	"log"
@@ -140,27 +139,6 @@ func StringToBool(val string) bool {
 	} else {
 		return false
 	}
-}
-
-type EmailUserNameType struct {
-	Email    string
-	Username string
-}
-
-// EmailUsername processes and returns the loginName as email or username
-func EmailUsername(loginName string) EmailUserNameType {
-	if govalidator.IsEmail(loginName) {
-		return EmailUserNameType{
-			Email:    loginName,
-			Username: "",
-		}
-	}
-
-	return EmailUserNameType{
-		Email:    "",
-		Username: loginName,
-	}
-
 }
 
 func TypeOf(rec interface{}) reflect.Type {
@@ -713,17 +691,4 @@ func RandomNumbers(n int) string {
 		vString = append(vString, fmt.Sprintf("%v", item))
 	}
 	return fmt.Sprintf("%v", strings.Join(vString, ""))
-}
-
-// ValidateSubActionParams validates that subscriber-appIds includes actionParam-appId, for save - create/update tasks
-func ValidateSubActionParams(actParams []map[string]interface{}, subAppIds []string) bool {
-	result := false
-	for _, rec := range actParams {
-		id, idOk := rec["appId"].(string)
-		if !idOk || !ArrayStringContains(subAppIds, id) {
-			return false
-		}
-		result = true
-	}
-	return result
 }

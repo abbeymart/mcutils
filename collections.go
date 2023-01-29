@@ -87,6 +87,7 @@ func ArrayFloatContains(arr []float64, str float64) bool {
 	return false
 }
 
+// Any function determines if one or more of the slice-values satisfies the testFunc.
 func Any[T ValueType](arr []T, testFunc TestFuncType[T]) bool {
 	for _, value := range arr {
 		if testFunc(value) {
@@ -96,6 +97,7 @@ func Any[T ValueType](arr []T, testFunc TestFuncType[T]) bool {
 	return false
 }
 
+// All function determines if all the slice-values satisfies the testFunc.
 func All[T ValueType](arr []T, testFunc TestFuncType[T]) bool {
 	for _, value := range arr {
 		if !testFunc(value) {
@@ -105,84 +107,89 @@ func All[T ValueType](arr []T, testFunc TestFuncType[T]) bool {
 	return true
 }
 
-// TODO: include result address/pointer as function parameter to improve performance
+// include result address/pointer as function parameter to improve performance
 
-func Map[T ValueType](arr []T, mapFunc func(T) T) []T {
-	var mapResult []T
+// Map function map slice of type T, by the mapFunc.
+func Map[T ValueType](arr []T, mapFunc func(T) T, result []T) {
+	// reset the result value
+	result = []T{}
 	for _, v := range arr {
-		mapResult = append(mapResult, mapFunc(v))
+		result = append(result, mapFunc(v))
 	}
-	return mapResult
 }
 
+// MapGen function generates series of map value of type T and send to the mapChan channel.
 func MapGen[T ValueType](arr []T, mapFunc func(T) T, mapChan chan<- T) {
 	for _, v := range arr {
 		mapChan <- mapFunc(v)
 	}
+	// ends send task to the channel
 	if mapChan != nil {
 		close(mapChan)
 	}
 }
 
-func MapInt(arr []int, mapFunc func(int) int) []int {
-	var mapResult []int
+// MapInt function returns the mapped-slice-value of type int, based on the mapFunc.
+func MapInt(arr []int, mapFunc func(int) int, result []int) {
+	result = []int{}
 	for _, v := range arr {
-		mapResult = append(mapResult, mapFunc(v))
+		result = append(result, mapFunc(v))
 	}
-	return mapResult
 }
 
-func MapFloat(arr []float64, mapFunc func(float64) float64) []float64 {
-	var mapResult []float64
+// MapFloat function returns the mapped-slice-value, of type float64, based on the mapFunc.
+func MapFloat(arr []float64, mapFunc func(float64) float64, result []float64) {
+	result = []float64{}
 	for _, v := range arr {
-		mapResult = append(mapResult, mapFunc(v))
+		result = append(result, mapFunc(v))
 	}
-	return mapResult
 }
 
-func MapString(arr []string, mapFunc func(string) string) []string {
-	var mapResult []string
+// MapString function returns the mapped-slice-value, of type string, based on the mapFunc.
+func MapString(arr []string, mapFunc func(string) string, result []string) {
+	result = []string{}
 	for _, v := range arr {
-		mapResult = append(mapResult, mapFunc(v))
+		result = append(result, mapFunc(v))
 	}
-	return mapResult
 }
 
-func Filter[T ValueType](arr []T, filterFunc func(T) bool) []T {
-	var mapResult []T
+// Filter function returns the filtered-slice-value, of type T, based on the filterFunc [generic].
+func Filter[T ValueType](arr []T, filterFunc func(T) bool, result []T) {
+	result = []T{}
 	for _, v := range arr {
 		if filterFunc(v) {
-			mapResult = append(mapResult, v)
+			result = append(result, v)
 		}
 	}
-	return mapResult
 }
 
+// FilterGen function returns series filtered-value, of type T, based on the filterFunc [generic].
 func FilterGen[T ValueType](arr []T, filterFunc func(T) bool, filterChan chan<- T) {
 	for _, v := range arr {
 		if filterFunc(v) {
 			filterChan <- v
 		}
 	}
+	// ends send task to the channel
 	if filterChan != nil {
 		close(filterChan)
 	}
-
 }
 
-func Take[T ValueType](num uint, arr []T) []T {
-	var takeResult []T
+// Take function returns num of the arr slice of type T [generic].
+func Take[T ValueType](num uint, arr []T, result []T) {
+	result = []T{}
 	var cnt uint = 0
 	for _, v := range arr {
 		if cnt == num {
 			break
 		}
-		takeResult = append(takeResult, v)
+		result = append(result, v)
 		cnt++
 	}
-	return takeResult
 }
 
+// TakeGen function returns num series of values, of type T [generic].
 func TakeGen[T ValueType](num uint, arr []T, takeChan chan<- T) {
 	// use channels to implement generator to send/yield/generate num of values from arr
 	var cnt uint = 0
@@ -193,73 +200,67 @@ func TakeGen[T ValueType](num uint, arr []T, takeChan chan<- T) {
 		takeChan <- v
 		cnt++
 	}
+	// ends send task to the channel
 	if takeChan != nil {
 		close(takeChan)
 	}
 }
 
-// TODO: reverse array functions
-
 // ReverseArray returns the reverse values of the specified array/slice [generic type]
-func ReverseArray[T ValueType](arr []T) []T {
+func ReverseArray[T ValueType](arr []T, result []T) {
 	// arr and arrChan must be of the same type: int, float
-	var reverseArray []T
+	result = []T{}
 	for i := len(arr) - 1; i >= 0; i-- {
-		reverseArray = append(reverseArray, arr[i])
+		result = append(result, arr[i])
 	}
-	return reverseArray
 }
 
-// ReverseArray1 returns the reverse values of the specified array/slice, DEPRECATED - use ReverseArray
-func ReverseArray1(arr []interface{}) []interface{} {
-	// arr and arrChan must be of the same type: int, float
-	var reverseArray []interface{}
+// ReverseArrayInt returns the reverse values of the specified array/slice of int.
+func ReverseArrayInt(arr []int, result []int) {
+	result = []int{}
 	for i := len(arr) - 1; i >= 0; i-- {
-		reverseArray = append(reverseArray, arr[i])
+		result = append(result, arr[i])
 	}
-	return reverseArray
 }
 
-func ReverseArrayInt(arr []int) []int {
-	var reverseArray []int
+// ReverseArrayFloat returns the reverse values of the specified array/slice of float64.
+func ReverseArrayFloat(arr []float64, result []float64) {
+	result = []float64{}
 	for i := len(arr) - 1; i >= 0; i-- {
-		reverseArray = append(reverseArray, arr[i])
+		result = append(result, arr[i])
 	}
-	return reverseArray
 }
 
-func ReverseArrayFloat(arr []float64) []float64 {
-	var reverseArray []float64
-	for i := len(arr) - 1; i >= 0; i-- {
-		reverseArray = append(reverseArray, arr[i])
-	}
-	return reverseArray
-}
-
-// ReverseArrayGenerator sequentially generates reverse values of the specified array/slice
-func ReverseArrayGenerator[T ValueType](arr []T, arrChan chan T) {
+// ReverseArrayGenerator sequentially generates reverse values of the specified array/slice [generic]
+func ReverseArrayGenerator[T ValueType](arr []T, arrChan chan<- T) {
 	// arr and arrChan must be of the same type: int, float
 	for i := len(arr) - 1; i >= 0; i-- {
 		arrChan <- arr[i]
 	}
-}
-
-// ReverseArrayGen sequentially generates reverse values of the specified array/slice - DEPRECATED - use // ReverseArrayGeneratorGeneric
-func ReverseArrayGen(arr []interface{}, arrChan chan interface{}) {
-	// arr and arrChan must be of the same type: int, float
-	for i := len(arr) - 1; i >= 0; i-- {
-		arrChan <- arr[i]
+	// ends send task to the channel
+	if arrChan != nil {
+		close(arrChan)
 	}
 }
 
-func ReverseArrayIntGen(arr []int, arrChan chan int) {
+// ReverseArrayIntGen sequentially generates reverse values of the specified array/slice of int.
+func ReverseArrayIntGen(arr []int, arrChan chan<- int) {
 	for i := len(arr) - 1; i >= 0; i-- {
 		arrChan <- arr[i]
 	}
+	// ends send task to the channel
+	if arrChan != nil {
+		close(arrChan)
+	}
 }
 
-func ReverseArrayFloatGen(arr []float64, arrChan chan float64) {
+// ReverseArrayFloatGen sequentially generates reverse values of the specified array/slice of float64.
+func ReverseArrayFloatGen(arr []float64, arrChan chan<- float64) {
 	for i := len(arr) - 1; i >= 0; i-- {
 		arrChan <- arr[i]
+	}
+	// ends send task to the channel
+	if arrChan != nil {
+		close(arrChan)
 	}
 }
