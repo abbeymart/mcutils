@@ -74,9 +74,15 @@ type StringSliceType struct {
 type FloatSliceType struct {
 	value []float64
 }
+
+//type FloatSliceType []float64
+
 type BoolSliceType struct {
 	value []bool
 }
+
+//type BoolSliceType []bool
+
 type IntSliceType struct {
 	value []int
 }

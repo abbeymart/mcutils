@@ -65,6 +65,8 @@ func (arr *GenericSliceType[T]) All(testFunc TestFuncType[T]) bool {
 	return true
 }
 
+// TODO: include result address/pointer as method parameter to improve performance
+
 func (arr *GenericSliceType[T]) Map(mapFunc func(T) T) []T {
 	var mapResult []T
 	for _, v := range arr.value {
@@ -155,3 +157,5 @@ func (arr *GenericSliceType[T]) TakeGen(num uint, takeChan chan<- T) {
 		close(takeChan)
 	}
 }
+
+// TODO: reverse array methods

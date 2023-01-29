@@ -37,7 +37,7 @@ func SeparatorFieldToCamelCase(text string, sep string) (string, error) {
 	firstWord := strings.ToLower(textArray[0])
 	// convert other words: first letter to upper case and other letters to lowercase
 	remainingWords := textArray[1:]
-	var otherWords string
+	otherWords := ""
 	for _, v := range remainingWords {
 		// transform first letter to upper case and other letters to lowercase
 		otherWords += strings.ToUpper(string(v[0])) + strings.ToLower(v[1:])
@@ -56,7 +56,7 @@ func SeparatorFieldToPascalCase(text string, sep string) (string, error) {
 	// split text by separator/sep
 	textArray := strings.Split(text, sep)
 	// convert all words: transform first letter to upper case and other letters to lowercase
-	var allWords string
+	allWords := ""
 	for _, v := range textArray {
 		// transform first letter to upper case and other letters to lowercase
 		allWords += strings.ToUpper(string(v[0])) + strings.ToLower(v[1:])
@@ -65,7 +65,7 @@ func SeparatorFieldToPascalCase(text string, sep string) (string, error) {
 	return fmt.Sprintf("%v", allWords), nil
 }
 
-// CaseFieldToUnderscore transforms camelCase or PascalCase name to underscore name
+// CaseFieldToUnderscore transforms camelCase or PascalCase name to underscore name, in lowercase
 func CaseFieldToUnderscore(caseString string) string {
 	// Create slice of words from the cased-value, separate at Uppercase-character
 	re := regexp.MustCompile(`[A-Z][^A-Z]*`)
@@ -141,193 +141,6 @@ func StringToBool(val string) bool {
 		return false
 	}
 }
-
-// ReverseArray returns the reverse values of the specified array/slice [generic type]
-func ReverseArray[T ValueType](arr []T) []T {
-	// arr and arrChan must be of the same type: int, float
-	var reverseArray []T
-	for i := len(arr) - 1; i >= 0; i-- {
-		reverseArray = append(reverseArray, arr[i])
-	}
-	return reverseArray
-}
-
-// ReverseArray1 returns the reverse values of the specified array/slice, DEPRECATED - use ReverseArray
-func ReverseArray1(arr []interface{}) []interface{} {
-	// arr and arrChan must be of the same type: int, float
-	var reverseArray []interface{}
-	for i := len(arr) - 1; i >= 0; i-- {
-		reverseArray = append(reverseArray, arr[i])
-	}
-	return reverseArray
-}
-
-func ReverseArrayInt(arr []int) []int {
-	var reverseArray []int
-	for i := len(arr) - 1; i >= 0; i-- {
-		reverseArray = append(reverseArray, arr[i])
-	}
-	return reverseArray
-}
-
-func ReverseArrayFloat(arr []float64) []float64 {
-	var reverseArray []float64
-	for i := len(arr) - 1; i >= 0; i-- {
-		reverseArray = append(reverseArray, arr[i])
-	}
-	return reverseArray
-}
-
-// ReverseArrayGenerator sequentially generates reverse values of the specified array/slice
-func ReverseArrayGenerator[T ValueType](arr []T, arrChan chan T) {
-	// arr and arrChan must be of the same type: int, float
-	for i := len(arr) - 1; i >= 0; i-- {
-		arrChan <- arr[i]
-	}
-}
-
-// ReverseArrayGen sequentially generates reverse values of the specified array/slice - DEPRECATED - use // ReverseArrayGeneratorGeneric
-func ReverseArrayGen(arr []interface{}, arrChan chan interface{}) {
-	// arr and arrChan must be of the same type: int, float
-	for i := len(arr) - 1; i >= 0; i-- {
-		arrChan <- arr[i]
-	}
-}
-
-func ReverseArrayIntGen(arr []int, arrChan chan int) {
-	for i := len(arr) - 1; i >= 0; i-- {
-		arrChan <- arr[i]
-	}
-}
-
-func ReverseArrayFloatGen(arr []float64, arrChan chan float64) {
-	for i := len(arr) - 1; i >= 0; i-- {
-		arrChan <- arr[i]
-	}
-}
-
-// counters
-
-type CounterValue[T ValueType | map[string]interface{}] struct {
-	Count int
-	Value T
-}
-type ArrayValue[T ValueType] []T
-type ArrayOfString []string
-type ArrayOfInt []int
-type ArrayOfFloat []float64
-type DataCount map[string]int
-type SliceObjectType[T map[string]interface{}] []T
-type CounterResult[T ValueType] map[string]CounterValue[T]
-type ObjectCounterResult[T map[string]interface{}] map[string]CounterValue[T]
-
-// Counter method returns the unique counts of the specified array/slice values[int, float, string and bool]
-func (val ArrayValue[T]) Counter() CounterResult[T] {
-	var count = make(CounterResult[T])
-	for _, it := range val {
-		// stringify it=>key
-		var itStr = fmt.Sprintf("%v", it)
-		if v, ok := count[itStr]; ok && v.Count > 0 {
-			count[itStr] = CounterValue[T]{
-				Count: v.Count + 1,
-				Value: it,
-			}
-		} else {
-			count[itStr] = CounterValue[T]{
-				Count: 1,
-				Value: it,
-			}
-		}
-	}
-	return count
-}
-
-// SliceObjectCounter method returns the unique counts of the specified array/slice of map[string]interface{} values
-func (val SliceObjectType[T]) SliceObjectCounter() ObjectCounterResult[T] {
-	var count ObjectCounterResult[T]
-	for _, it := range val {
-		// stringify it=>key
-		jsonVal, _ := json.Marshal(it)
-		var itStr = string(jsonVal)
-		if v, ok := count[itStr]; ok && v.Count > 0 {
-			count[itStr] = CounterValue[T]{
-				Count: v.Count + 1,
-				Value: it,
-			}
-		} else {
-			count[itStr] = CounterValue[T]{
-				Count: 1,
-				Value: it,
-			}
-		}
-	}
-	return count
-}
-
-// Set method returns the slice of set values for a generic type T
-func (val ArrayValue[T]) Set() []T {
-	// refactor, using counter method
-	var count = val.Counter()
-	// compute set values
-	setValue := make([]T, len(count))
-	for _, value := range count {
-		setValue = append(setValue, value.Value)
-	}
-	return setValue
-}
-
-func (val ArrayOfString) SetOfString() []string {
-	var count = make(map[string]int)
-	for _, itVal := range val {
-		if v, ok := count[itVal]; ok && v > 0 {
-			count[itVal] = v + 1
-		} else {
-			count[itVal] = 1
-		}
-	}
-	// compute set values
-	setValue := make([]string, len(count))
-	for keyValue := range count {
-		setValue = append(setValue, keyValue)
-	}
-	return setValue
-}
-
-func (val ArrayOfInt) SetOfInt() []int {
-	var count = make(map[int]int)
-	for _, itVal := range val {
-		if v, ok := count[itVal]; ok && v > 0 {
-			count[itVal] = v + 1
-		} else {
-			count[itVal] = 1
-		}
-	}
-	// compute set values
-	setValue := make([]int, len(count))
-	for keyValue := range count {
-		setValue = append(setValue, keyValue)
-	}
-	return setValue
-}
-
-func (val ArrayOfFloat) SetOfFloat() []float64 {
-	var count = make(map[float64]int)
-	for _, itVal := range val {
-		if v, ok := count[itVal]; ok && v > 0 {
-			count[itVal] = v + 1
-		} else {
-			count[itVal] = 1
-		}
-	}
-	// compute set values
-	setValue := make([]float64, len(count))
-	for keyValue := range count {
-		setValue = append(setValue, keyValue)
-	}
-	return setValue
-}
-
-// Collections
 
 type EmailUserNameType struct {
 	Email    string
@@ -460,17 +273,7 @@ func NumFormatter(num *big.Float, precision int) (string, error) {
 	return res, nil
 }
 
-// JsonDataETL method converts json inputs to equivalent struct data type specification
-// rec must be a pointer to a type matching the jsonRec
-func JsonDataETL(jsonRec []byte, rec interface{}) error {
-	if err := json.Unmarshal(jsonRec, &rec); err == nil {
-		return nil
-	} else {
-		return errors.New(fmt.Sprintf("Error converting json-to-record-format: %v", err.Error()))
-	}
-}
-
-// JsonToStruct converts json inputs to equivalent struct data type specification
+// JsonToStruct converts json input, in []byte, to the equivalent struct data type specification
 // rec must be a pointer to a type matching the jsonRec
 func JsonToStruct(jsonRec []byte, rec interface{}) error {
 	if err := json.Unmarshal(jsonRec, &rec); err == nil {
@@ -480,22 +283,23 @@ func JsonToStruct(jsonRec []byte, rec interface{}) error {
 	}
 }
 
-type ActionParamType map[string]interface{}
-type ActionParamsType []ActionParamType
+//type ActionParamType map[string]interface{}
+//type ActionParamsType []ActionParamType
 
-// DataToValueParam accepts only a struct type/model and returns the ActionParamType
-// data camel/Pascal-case keys are converted to underscore-keys to match table-field/columns specs
-func DataToValueParam(rec interface{}) (ActionParamType, error) {
+// StructToMapUnderscoreData transform a struct data type to the map[string]interface{} value type, camelCase fields.
+// map keys are converted to underscore types to match database-table-field/columns specs
+func StructToMapUnderscoreData(rec interface{}) (map[string]interface{}, error) {
 	// validate recs as struct{} type
 	recType := fmt.Sprintf("%v", reflect.TypeOf(rec).Kind())
 	switch recType {
 	case "struct":
-		dataValue := ActionParamType{}
+		dataValue := map[string]interface{}{}
 		v := reflect.ValueOf(rec)
 		typeOfS := v.Type()
 
 		for i := 0; i < v.NumField(); i++ {
-			dataValue[govalidator.CamelCaseToUnderscore(typeOfS.Field(i).Name)] = v.Field(i).Interface()
+			dataValue[CaseFieldToUnderscore(typeOfS.Field(i).Name)] = v.Field(i).Interface()
+			// dataValue[govalidator.CamelCaseToUnderscore(typeOfS.Field(i).Name)] = v.Field(i).Interface()
 			//fmt.Printf("Field: %s\tValue: %v\n", typeOfS.Field(i).ItemName, v.Field(i).Interface())
 		}
 		return dataValue, nil
@@ -504,7 +308,31 @@ func DataToValueParam(rec interface{}) (ActionParamType, error) {
 	}
 }
 
-// StructToMap function converts struct to map
+// TagField returns the field-tag (e.g. table-column-name) for mcorm/db/other tag, for the specified struct data fieldName.
+func TagField(rec interface{}, fieldName string, tag string) (string, error) {
+	// validate recs as struct{} type
+	t := reflect.TypeOf(rec)
+	recType := fmt.Sprintf("%v", t.Kind())
+	switch recType {
+	case "struct":
+		break
+	default:
+		return "", errors.New(fmt.Sprintf("rec parameter must be of type struct{}"))
+	}
+	// check fieldName, as specified
+	field, found := t.FieldByName(fieldName)
+	if !found {
+		// check public field/PascalCase, converts the first-letter to upper-case
+		field, found = t.FieldByName(strings.ToUpper(string(fieldName[0]) + fieldName[1:]))
+		if !found {
+			return "", errors.New(fmt.Sprintf("error retrieving tag-field for fieldName: %v", fieldName))
+		}
+	}
+	//tagValue := field.Tag
+	return field.Tag.Get(tag), nil
+}
+
+// StructToMap function transforms struct to map. Map keys match the json-fields of the struct data.
 func StructToMap(rec interface{}) (map[string]interface{}, error) {
 	// validate recs as struct{} type
 	recType := fmt.Sprintf("%v", reflect.TypeOf(rec).Kind())
@@ -528,32 +356,8 @@ func StructToMap(rec interface{}) (map[string]interface{}, error) {
 	return mapData, nil
 }
 
-// TagField return the field-tag (e.g. table-column-name) for mcorm tag
-func TagField(rec interface{}, fieldName string, tag string) (string, error) {
-	// validate recs as struct{} type
-	t := reflect.TypeOf(rec)
-	recType := fmt.Sprintf("%v", t.Kind())
-	switch recType {
-	case "struct":
-		break
-	default:
-		return "", errors.New(fmt.Sprintf("rec parameter must be of type struct{}"))
-	}
-	// convert the first-letter to upper-case (public field)
-	field, found := t.FieldByName(strings.Title(fieldName))
-	if !found {
-		// check private field
-		field, found = t.FieldByName(fieldName)
-		if !found {
-			return "", errors.New(fmt.Sprintf("error retrieving tag-field for field-name: %v", fieldName))
-		}
-	}
-	//tagValue := field.Tag
-	return field.Tag.Get(tag), nil
-}
-
-// StructToTagMap function converts struct to map (tag/underscore_field), for crud-db-table-record
-func StructToTagMap(rec interface{}, tag string) (map[string]interface{}, error) {
+// StructToMapTag function converts struct to map (with key of tag/underscore name), for crud-db-table-record
+func StructToMapTag(rec interface{}, tag string) (map[string]interface{}, error) {
 	// validate recs as struct{} type
 	recType := fmt.Sprintf("%v", reflect.TypeOf(rec).Kind())
 	switch recType {
@@ -578,25 +382,6 @@ func StructToTagMap(rec interface{}, tag string) (map[string]interface{}, error)
 	return tagMapData, nil
 }
 
-func ToCamelCase(text string, sep string) string {
-	// accept words/text and separator(' ', '_', '__', '.')
-	textArray := strings.Split(text, sep)
-	// convert the first word to lowercase
-	firstWord := strings.ToLower(textArray[0])
-	// convert other words: first letter to upper case and other letters to lowercase
-	remWords := textArray[1:]
-	var otherWords []string
-	for _, item := range remWords {
-		// convert first letter to upper case
-		item0 := strings.ToUpper(string(item[0]))
-		// convert other letters to lowercase
-		item1N := strings.ToLower(item[1:])
-		itemString := fmt.Sprintf("%v%v", item0, item1N)
-		otherWords = append(otherWords, itemString)
-	}
-	return fmt.Sprintf("%v%v", firstWord, strings.Join(otherWords, ""))
-}
-
 // StructToMapUnderscore converts struct to map (underscore_fields), for crud-db-table-record
 func StructToMapUnderscore(rec interface{}) (map[string]interface{}, error) {
 	// validate recs as struct{} type
@@ -615,7 +400,7 @@ func StructToMapUnderscore(rec interface{}) (map[string]interface{}, error) {
 	}
 	// compose caseUnderscoreMapData
 	for key, val := range mapData {
-		caseUnderscoreMapData[govalidator.CamelCaseToUnderscore(key)] = val
+		caseUnderscoreMapData[CaseFieldToUnderscore(key)] = val
 	}
 	return caseUnderscoreMapData, nil
 }
@@ -631,13 +416,18 @@ func MapToMapUnderscore(rec interface{}) (map[string]interface{}, error) {
 	uMapData := map[string]interface{}{}
 	// compose uMapData
 	for key, val := range recMap {
-		uMapData[govalidator.CamelCaseToUnderscore(key)] = val
+		uMapData[CaseFieldToUnderscore(key)] = val
 	}
 	return uMapData, nil
 }
 
-// MapToMapCamelCase converts map underscore-fields to camelCase-fields
-func MapToMapCamelCase(rec interface{}, sep string) (map[string]interface{}, error) {
+// MapUnderscoreToMapCamelCase converts map underscore-fields to camelCase-fields
+func MapUnderscoreToMapCamelCase(rec interface{}, sep string) (map[string]interface{}, error) {
+	// validate acceptable separators [" ", "_", "__", ".", "|"]
+	sepArr := PermittedSeparators
+	if !ArrayContains(sepArr, sep) {
+		return nil, errors.New(fmt.Sprintf("missing or unacceptable separator: %v | Acceptable-separators: %v", sep, strings.Join(sepArr, ", ")))
+	}
 	// validate recs as map type
 	recMap, ok := rec.(map[string]interface{})
 	if !ok || recMap == nil {
@@ -647,12 +437,21 @@ func MapToMapCamelCase(rec interface{}, sep string) (map[string]interface{}, err
 	uMapData := map[string]interface{}{}
 	// compose uMapData
 	for key, val := range recMap {
-		uMapData[ToCamelCase(key, sep)] = val
+		if strings.Contains(key, sep) {
+			if camelCaseField, err := SeparatorFieldToCamelCase(key, sep); err != nil {
+				return nil, err
+			} else {
+				uMapData[camelCaseField] = val
+			}
+		} else {
+			uMapData[key] = val
+		}
+
 	}
 	return uMapData, nil
 }
 
-// ArrayMapToMapUnderscore converts []map-fields to underscore
+// ArrayMapToMapUnderscore converts slice of map to map with underscore keys/fields.
 func ArrayMapToMapUnderscore(rec interface{}) ([]map[string]interface{}, error) {
 	// validate recs as []map type
 	arrayMap, ok := rec.([]map[string]interface{})
@@ -673,8 +472,8 @@ func ArrayMapToMapUnderscore(rec interface{}) ([]map[string]interface{}, error) 
 	return uArrayMapData, nil
 }
 
-// StructToFieldValues converts struct to record fields(underscore) and associated values (columns and values)
-func StructToFieldValues(rec interface{}) ([]string, []interface{}, error) {
+// StructToFieldValues converts struct to record fields(underscore) and associated values - columns and values.
+func StructToFieldValues(rec interface{}) (tableFields []string, fieldValues []interface{}, err error) {
 	// validate recs as struct{} type
 	recType := fmt.Sprintf("%v", reflect.TypeOf(rec).Kind())
 	switch recType {
@@ -683,22 +482,22 @@ func StructToFieldValues(rec interface{}) ([]string, []interface{}, error) {
 	default:
 		return nil, nil, errors.New(fmt.Sprintf("rec parameter must be of type struct{}"))
 	}
-	var tableFields []string
-	var fieldValues []interface{}
+	//var tableFields []string
+	//var fieldValues []interface{}
 	mapDataValue, err := StructToMap(rec)
 	if err != nil {
 		return nil, nil, errors.New("error computing struct to map")
 	}
 	// compose table fields/column(underscore) and values
 	for key, val := range mapDataValue {
-		tableFields = append(tableFields, govalidator.CamelCaseToUnderscore(key))
+		tableFields = append(tableFields, CaseFieldToUnderscore(key))
 		fieldValues = append(fieldValues, val)
 	}
 	return tableFields, fieldValues, nil
 }
 
 // ArrayMapToStruct converts []map/actParams to []struct/model-type
-func ArrayMapToStruct(actParams ActionParamsType, recs interface{}) (interface{}, error) {
+func ArrayMapToStruct(actParams []map[string]interface{}, recs interface{}) (interface{}, error) {
 	// validate recs as slice / []struct{} type
 	recsType := fmt.Sprintf("%v", reflect.TypeOf(recs).Kind())
 	switch recsType {
@@ -758,7 +557,7 @@ func MapToStruct(mapRecord map[string]interface{}, rec interface{}) (interface{}
 	return rec, nil
 }
 
-// GetParamsMessage compose the message-object into mcresponse.ResponseMessage
+// GetParamsMessage compose the message-object into mcresponse.ResponseMessage.
 func GetParamsMessage(msgObject MessageObject) mcresponse.ResponseMessage {
 	var messages = ""
 
@@ -775,7 +574,8 @@ func GetParamsMessage(msgObject MessageObject) mcresponse.ResponseMessage {
 	})
 }
 
-// ConvertJsonStringToMapValue converts the db-json-string-value to the map-type
+// ConvertJsonStringToMapValue converts the db-json-string-value to the map-type.
+// Returns map value on success, or on error, returns map nil-value and error.
 func ConvertJsonStringToMapValue(jsonStr string) (map[string]interface{}, error) {
 	mapVal := map[string]interface{}{}
 	jErr := json.Unmarshal([]byte(jsonStr), &mapVal)
@@ -785,16 +585,18 @@ func ConvertJsonStringToMapValue(jsonStr string) (map[string]interface{}, error)
 	return mapVal, nil
 }
 
-// ConvertJsonStringToTypeValue converts the db-json-string-value to the base-type
-func ConvertJsonStringToTypeValue(jsonStr string, typePointer interface{}) (interface{}, error) {
+// ConvertJsonStringToTypeValue converts the db-json-string-value to the base-type.
+// On success, store the transformed/converted value to the base-type address (typePointer).
+func ConvertJsonStringToTypeValue(jsonStr string, typePointer interface{}) error {
 	jErr := json.Unmarshal([]byte(jsonStr), typePointer)
 	if jErr != nil {
-		return nil, jErr
+		return jErr
 	}
-	return typePointer, nil
+	return nil
 }
 
-// ConvertJsonBase64StringToTypeValue converts the db-json-string-value to the base-type
+// ConvertJsonBase64StringToTypeValue converts the db-json-string-value to the base-type.
+// On success, store and returns the transformed/converted value to the base-type address (typePointer).
 func ConvertJsonBase64StringToTypeValue(base64Str interface{}, typePointer interface{}) (interface{}, error) {
 	// assert the base64String value as of string-type
 	strVal, ok := base64Str.(string)
@@ -815,6 +617,7 @@ func ConvertJsonBase64StringToTypeValue(base64Str interface{}, typePointer inter
 }
 
 // ConvertJsonBase64StringToMap converts the db-json-string-value to the map-type
+// On success, returns the resulting map-value.
 func ConvertJsonBase64StringToMap(base64Str interface{}) (map[string]interface{}, error) {
 	mapVal := map[string]interface{}{}
 	strVal, ok := base64Str.(string)
@@ -832,18 +635,22 @@ func ConvertJsonBase64StringToMap(base64Str interface{}) (map[string]interface{}
 	return mapVal, nil
 }
 
+// ConvertByteSliceToBase64Str converts slice of byte to base64-string type.
 func ConvertByteSliceToBase64Str(fileContent []byte) string {
 	return base64.StdEncoding.EncodeToString(fileContent)
 }
 
+// ConvertStringToBase64Str converts string value to slice of byte.
 func ConvertStringToBase64Str(fileContent string) string {
 	return base64.StdEncoding.EncodeToString([]byte(fileContent))
 }
 
-func ExcludeEmptyIdFromMapRecord(rec ActionParamType) ActionParamType {
-	mapVal := ActionParamType{}
+// ExcludeEmptyIdFromMapRecord excludes id field with zero value("").
+// Return the map record with id fields removed.
+func ExcludeEmptyIdFromMapRecord(rec map[string]interface{}) map[string]interface{} {
+	mapVal := map[string]interface{}{}
 	for key, val := range rec {
-		if key == "id" && val == "" {
+		if key == "id" && (val == nil || val == "") {
 			continue
 		}
 		mapVal[key] = val
@@ -851,9 +658,10 @@ func ExcludeEmptyIdFromMapRecord(rec ActionParamType) ActionParamType {
 	return mapVal
 }
 
-// ExcludeFieldFromMapRecord exclude id and accessKey fields
-func ExcludeFieldFromMapRecord(rec ActionParamType, field string) ActionParamType {
-	mapVal := ActionParamType{}
+// ExcludeFieldFromMapRecord excludes the specified field name from the map record.
+// Return the map record with the specified field removed.
+func ExcludeFieldFromMapRecord(rec map[string]interface{}, field string) map[string]interface{} {
+	mapVal := map[string]interface{}{}
 	for key, val := range rec {
 		if key == field {
 			continue
@@ -863,12 +671,14 @@ func ExcludeFieldFromMapRecord(rec ActionParamType, field string) ActionParamTyp
 	return mapVal
 }
 
-func ExcludeEmptyIdFields(recs []ActionParamType) []ActionParamType {
-	var mapValues []ActionParamType
+// ExcludeEmptyIdFields excludes fields with name id or ending with Id/ID/iD, with zero value("").
+// Return the map record with id fields removed.
+func ExcludeEmptyIdFields(recs []map[string]interface{}) []map[string]interface{} {
+	var mapValues []map[string]interface{}
 	for _, rec := range recs {
-		mapVal := ActionParamType{}
+		mapVal := map[string]interface{}{}
 		for key, val := range rec {
-			if (key == "id" || strings.HasSuffix(key, "Id")) && (val == nil || val == "") {
+			if (key == "id" || strings.HasSuffix(strings.ToLower(key), "id")) && (val == nil || val == "") {
 				continue
 			}
 			mapVal[key] = val
@@ -876,18 +686,6 @@ func ExcludeEmptyIdFields(recs []ActionParamType) []ActionParamType {
 		mapValues = append(mapValues, mapVal)
 	}
 	return mapValues
-}
-
-func StructToMapToCamelCase(rec interface{}, sep string) (map[string]interface{}, error) {
-	mapVal, mErr := StructToMap(rec)
-	if mErr != nil {
-		return nil, mErr
-	}
-	val, err := MapToMapCamelCase(mapVal, sep)
-	if err != nil {
-		return nil, err
-	}
-	return val, nil
 }
 
 // ComputeTaskDuration computes the task interval in microseconds
@@ -918,7 +716,7 @@ func RandomNumbers(n int) string {
 }
 
 // ValidateSubActionParams validates that subscriber-appIds includes actionParam-appId, for save - create/update tasks
-func ValidateSubActionParams(actParams ActionParamsType, subAppIds []string) bool {
+func ValidateSubActionParams(actParams []map[string]interface{}, subAppIds []string) bool {
 	result := false
 	for _, rec := range actParams {
 		id, idOk := rec["appId"].(string)

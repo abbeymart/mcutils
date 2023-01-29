@@ -105,6 +105,8 @@ func All[T ValueType](arr []T, testFunc TestFuncType[T]) bool {
 	return true
 }
 
+// TODO: include result address/pointer as function parameter to improve performance
+
 func Map[T ValueType](arr []T, mapFunc func(T) T) []T {
 	var mapResult []T
 	for _, v := range arr {
@@ -193,5 +195,71 @@ func TakeGen[T ValueType](num uint, arr []T, takeChan chan<- T) {
 	}
 	if takeChan != nil {
 		close(takeChan)
+	}
+}
+
+// TODO: reverse array functions
+
+// ReverseArray returns the reverse values of the specified array/slice [generic type]
+func ReverseArray[T ValueType](arr []T) []T {
+	// arr and arrChan must be of the same type: int, float
+	var reverseArray []T
+	for i := len(arr) - 1; i >= 0; i-- {
+		reverseArray = append(reverseArray, arr[i])
+	}
+	return reverseArray
+}
+
+// ReverseArray1 returns the reverse values of the specified array/slice, DEPRECATED - use ReverseArray
+func ReverseArray1(arr []interface{}) []interface{} {
+	// arr and arrChan must be of the same type: int, float
+	var reverseArray []interface{}
+	for i := len(arr) - 1; i >= 0; i-- {
+		reverseArray = append(reverseArray, arr[i])
+	}
+	return reverseArray
+}
+
+func ReverseArrayInt(arr []int) []int {
+	var reverseArray []int
+	for i := len(arr) - 1; i >= 0; i-- {
+		reverseArray = append(reverseArray, arr[i])
+	}
+	return reverseArray
+}
+
+func ReverseArrayFloat(arr []float64) []float64 {
+	var reverseArray []float64
+	for i := len(arr) - 1; i >= 0; i-- {
+		reverseArray = append(reverseArray, arr[i])
+	}
+	return reverseArray
+}
+
+// ReverseArrayGenerator sequentially generates reverse values of the specified array/slice
+func ReverseArrayGenerator[T ValueType](arr []T, arrChan chan T) {
+	// arr and arrChan must be of the same type: int, float
+	for i := len(arr) - 1; i >= 0; i-- {
+		arrChan <- arr[i]
+	}
+}
+
+// ReverseArrayGen sequentially generates reverse values of the specified array/slice - DEPRECATED - use // ReverseArrayGeneratorGeneric
+func ReverseArrayGen(arr []interface{}, arrChan chan interface{}) {
+	// arr and arrChan must be of the same type: int, float
+	for i := len(arr) - 1; i >= 0; i-- {
+		arrChan <- arr[i]
+	}
+}
+
+func ReverseArrayIntGen(arr []int, arrChan chan int) {
+	for i := len(arr) - 1; i >= 0; i-- {
+		arrChan <- arr[i]
+	}
+}
+
+func ReverseArrayFloatGen(arr []float64, arrChan chan float64) {
+	for i := len(arr) - 1; i >= 0; i-- {
+		arrChan <- arr[i]
 	}
 }
