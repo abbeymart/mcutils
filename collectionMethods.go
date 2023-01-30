@@ -1,7 +1,5 @@
 package mcutils
 
-// methods
-
 // Index method returns the index of the specified value (for string, it's case-insensitive)
 func (arr *GenericSliceType[T]) Index(queryVal T) int {
 	for i, value := range arr.value {
