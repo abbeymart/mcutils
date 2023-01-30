@@ -9,6 +9,7 @@ import (
 	"sort"
 )
 
+// Mean function returns the mean or average value from a slice of type float.
 func Mean(arr []float64) float64 {
 	var sum = 0.00
 	arrLength := len(arr)
@@ -18,21 +19,23 @@ func Mean(arr []float64) float64 {
 	return sum / float64(arrLength)
 }
 
+// Median function returns the mid or median value from a slice of type float.
 func Median(arr []float64) float64 {
 	// sort numbers, ascending order
 	sort.Float64s(arr)
 	arrLength := len(arr)
+	// if slice-items count is odd
 	if arrLength%2 != 0 {
-		// if count is odd
 		medianIndex := math.Floor(float64(arrLength / 2))
 		return arr[uint(medianIndex)]
 	}
-	// if count is even
-	medianIndex1 := (arrLength / 2) - 1
+	// if slice-items count is even
 	medianIndex2 := arrLength / 2
+	medianIndex1 := medianIndex2 - 1
 	return (arr[medianIndex1] + arr[medianIndex2]) / 2
 }
 
+// StandardDeviation function returns the standard-deviation value from a slice of type float.
 func StandardDeviation(arr []float64) float64 {
 	deltaSquareSum := 0.00
 	arrLength := len(arr)
@@ -43,22 +46,47 @@ func StandardDeviation(arr []float64) float64 {
 	return math.Sqrt(deltaSquareSum / float64(arrLength-1))
 }
 
-func Min(arr []float64) float64 {
-	// sort numbers, ascending order
-	sort.Float64s(arr)
-	return arr[0]
+// Min function returns the minimum value from a slice of type T (int or float).
+func Min[T Number](arr []T) T {
+	// set initial max value
+	max := arr[0]
+	// compute min and max values
+	for _, val := range arr {
+		if val > max {
+			max = val
+		}
+	}
+	return max
 }
 
-func Max(arr []float64) float64 {
-	// sort numbers, ascending order
-	sort.Float64s(arr)
-	return arr[len(arr)-1]
+// Max function returns the maximum value from a slice of type T (int or float).
+func Max[T Number](arr []T) T {
+	// set initial max value
+	max := arr[0]
+	// compute min and max values
+	for _, val := range arr {
+		if val > max {
+			max = val
+		}
+	}
+	return max
 }
 
-func MinMax(arr []float64) []float64 {
-	// sort numbers, ascending order
-	sort.Float64s(arr)
-	return []float64{arr[0], arr[len(arr)-1]}
+// MinMax function returns the minimum amd maximum values from a slice of type T (int or float).
+func MinMax[T Number](arr []T) (min T, max T) {
+	// set initial min and max values
+	min = arr[0]
+	max = arr[0]
+	// compute min and max values
+	for _, val := range arr {
+		if val < min {
+			min = val
+		}
+		if val > max {
+			max = val
+		}
+	}
+	return
 }
 
 func MeanSquareError() {
