@@ -158,12 +158,11 @@ func PythagorasGen(limit uint, pythagorasChan chan []uint) {
 	}
 }
 
-// Finite natural numbers generation
-
-func NaturalNumbersGen(count uint, naturalChan chan<- uint) {
-	// use channels to implement generator to yield/generate natural numbers
+// NaturalNumbersGen generates finite natural numbers.
+func NaturalNumbersGen(num uint, naturalChan chan<- uint) {
+	// use channels to implement generator to yield/generate finite natural numbers
 	var cnt uint
-	for cnt = 0; cnt < count; cnt++ {
+	for cnt = 0; cnt < num; cnt++ {
 		naturalChan <- cnt
 	}
 	if naturalChan != nil {
@@ -171,12 +170,16 @@ func NaturalNumbersGen(count uint, naturalChan chan<- uint) {
 	}
 }
 
-// Infinite natural numbers generation
-
-func NaturalNumbersGenInf(naturalChan chan<- uint) {
-	// use channels to implement generator to yield/generate natural numbers
-	// channel may be closed on by the requester
+// NaturalNumbersGenInf generates infinite natural numbers.
+func NaturalNumbersGenInf(naturalChan chan<- uint, stopFunc func() bool) {
+	// use channels to implement generator to yield/generate infinite natural numbers
 	for cnt := 0; ; cnt++ {
 		naturalChan <- uint(cnt)
+		if stopFunc() {
+			break
+		}
+	}
+	if naturalChan != nil {
+		close(naturalChan)
 	}
 }
