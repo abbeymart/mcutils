@@ -22,7 +22,7 @@ func AddMatrices[T float64 | int64](matrix1 [][]T, matrix2 [][]T, result [][]T) 
 		// validate matrix1 and matrix2 sub-items length
 		if len(mat1) != subItemLength || len(mat2) != subItemLength {
 			result = [][]T{}
-			return errors.New(fmt.Sprintf("length of both sub-matrices should be equal [matrix1[%v]: %v | matrix2[%v]: %v]", matrixIndex, len(matrix1), matrixIndex, len(matrix2)))
+			return errors.New(fmt.Sprintf("length of both sub-matrices should be equal [matrix1[%v]: %v | matrix2[%v]: %v]", matrix1[matrixIndex], len(matrix1), matrix2[matrixIndex], len(matrix2)))
 		}
 		// compute matrix additions
 		var matAddResult []T
@@ -41,7 +41,7 @@ func AddMatrices[T float64 | int64](matrix1 [][]T, matrix2 [][]T, result [][]T) 
 	return nil
 }
 
-// AddMultipleMatrices function adds multiple matrices of the same dimensions.
+// AddMultipleMatrices function [tensor] adds multiple matrices of the same dimensions.
 func AddMultipleMatrices[T float64 | int64](matrices [][][]T, result [][]T) error {
 	// initialize the matrix result
 	result = [][]T{}
@@ -88,7 +88,7 @@ func SubtractMatrices[T float64 | int64](matrix1 [][]T, matrix2 [][]T, result []
 		// validate matrix1 and matrix2 sub-items length
 		if len(mat1) != subItemLength || len(mat2) != subItemLength {
 			result = [][]T{}
-			return errors.New(fmt.Sprintf("length of both sub-matrices should be equal [matrix1[%v]: %v | matrix2[%v]: %v]", matrixIndex, len(matrix1), matrixIndex, len(matrix2)))
+			return errors.New(fmt.Sprintf("length of both sub-matrices should be equal [matrix1[%v]: %v | matrix2[%v]: %v]", matrix1[matrixIndex], len(matrix1), matrix2[matrixIndex], len(matrix2)))
 		}
 		// compute matrix subtractions
 		var matAddResult []T
@@ -107,7 +107,7 @@ func SubtractMatrices[T float64 | int64](matrix1 [][]T, matrix2 [][]T, result []
 	return nil
 }
 
-// SubtractMultipleMatrices function subtract multiple matrices of the same dimensions.
+// SubtractMultipleMatrices function [tensor] subtract multiple matrices of the same dimensions.
 func SubtractMultipleMatrices[T float64 | int64](matrices [][][]T, result [][]T) error {
 	// initialize the matrix result
 	result = [][]T{}
@@ -116,7 +116,7 @@ func SubtractMultipleMatrices[T float64 | int64](matrices [][][]T, result [][]T)
 		return errors.New(fmt.Sprintf("length of matrices should be greater than 1"))
 	}
 	// perform subtraction of the first two matrices
-	err := AddMatrices(matrices[0], matrices[1], result)
+	err := SubtractMatrices(matrices[0], matrices[1], result)
 	if err != nil {
 		result = [][]T{}
 		return err
@@ -257,39 +257,119 @@ func DivideScalarMatrix[T float64 | int64](matrix [][]T, scalar T, result [][]T)
 }
 
 // TransposeMatrix function transpose the matrix - swap rows and columns, i.e. rotate the matrix around it's diagonal.
-// TODO: complete
 func TransposeMatrix[T float64 | int64](matrix [][]T, result [][]T) error {
 	// initialize the matrix result
 	result = [][]T{}
-	// validate matrix1 and matrix2 length
+	// validate matrix length
 	if len(matrix) < 1 {
 		return errors.New(fmt.Sprintf("length of the matrix should greater than 0"))
 	}
-	matrixLength := len(matrix)
-	subItemLength := len(matrix[0])
-	matrixIndex := 0
-	for matrixIndex < matrixLength {
-		mat := matrix[matrixIndex]
-		// compute matrix additions
-		var matAddResult []T
-		subItemIndex := 0
-		for subItemIndex < subItemLength {
-			// perform addition
-			matAddResult = append(matAddResult, mat[subItemIndex]*scalar)
-			// increment subItemIndex
-			subItemIndex += 1
+	for _, matSlice := range matrix {
+		if len(matrix[0]) != len(matSlice) {
+			return errors.New(fmt.Sprintf("Length of matrix2 sub-items must be equal [Expected: %v, Got: %v]", len(matrix[0]), len(matSlice)))
 		}
-		// update result
-		result = append(result, matAddResult)
-		// increment matrixIndex
-		matrixIndex += 1
+	}
+	// transpose matrix, swap columns to rows, diagonally
+	matColumnItemsCount := len(matrix[0])
+	matColumnItemIndex := 0
+	for matColumnItemIndex < matColumnItemsCount {
+		var transposeSliceRow []T
+		for _, matColumnSlice := range matrix {
+			transposeSliceRow = append(transposeSliceRow, matColumnSlice[matColumnItemIndex])
+		}
+		result = append(result, transposeSliceRow)
+		matColumnItemIndex += 1
 	}
 	return nil
 }
 
-// MultiplyMatrices function multiply two matrices. TODO: complete
-// The number of rows in matrix1 must be the same as the number of columns in matrix2.
+// MultiplyMatrix function multiply two matrices.
+// The matrix1 single slice length must be the same as the number of columns in matrix2/sub-matrices.
+func MultiplyMatrix[T float64 | int64](matrix1 []T, matrix2 [][]T, result []T) error {
+	// initialize the matrix result
+	result = []T{}
+	// validate matrix2 values' lengths must match the length of matrix1[0]
+	if len(matrix1) != len(matrix2) {
+		return errors.New(fmt.Sprintf("Length of matrix1 [Expected: %v] must match the number of columns of matrix2 [Got: %v]", len(matrix1), len(matrix2)))
+	}
+	for _, mat2Slice := range matrix2 {
+		if len(matrix2[0]) != len(mat2Slice) {
+			return errors.New(fmt.Sprintf("Length of matrix2 sub-items must be equal [Expected: %v, Got: %v]", len(matrix2[0]), len(mat2Slice)))
+		}
+	}
+	// compute the matrices multiplication
+	mat1Slice := matrix1
+	mat1Columns := len(mat1Slice) // ==> matrix2 sub-items length/columns
+	mat1ColCount := 0
+	var matMultiSlices [][]T // Required to compute the summation of the row-column multiplications
+	for mat1ColCount < mat1Columns {
+		// compose multiplication Slice, by matching matrix1/matrix2-columns
+		mat1ColVal := mat1Slice[mat1ColCount]
+		mat2ColSlice := matrix2[mat1ColCount]
+		var matMultiSlice []T
+		for _, mat2ColVal := range mat2ColSlice {
+			matMultiSlice = append(matMultiSlice, mat2ColVal*mat1ColVal)
+		}
+		// update mat-multiplication-slice
+		matMultiSlices = append(matMultiSlices, matMultiSlice)
+		// next column
+		mat1ColCount += 1
+	}
+	// compute the sum of multiplication-slices by matching columns/rows
+	//var sumMultiplication []T
+	matMultiRows := len(matMultiSlices[0])
+	matMultiRow := 0
+	for matMultiRow < matMultiRows {
+		matMultiSum := T(0)
+		for _, val := range matMultiSlices {
+			matMultiSum += val[matMultiRow]
+		}
+		result = append(result, matMultiSum)
+		// next row
+		matMultiRow += 1
+	}
+	return nil
+}
+
+// MultiplyMatrices function multiply two matrices.
+// The number of rows in matrix1 sub-matrices must be the same as the number of columns in matrix2.
 func MultiplyMatrices[T float64 | int64](matrix1 [][]T, matrix2 [][]T, result [][]T) error {
+	// initialize the matrix result
+	result = [][]T{}
+	// validate matrix1 sub-items and matrix2 length, rows/columns matching
+	for _, matrix1Val := range matrix1 {
+		if len(matrix1[0]) != len(matrix1Val) {
+			return errors.New(fmt.Sprintf("Length of matrix1 sub-items must be the same [Expected: %v, Got: %v]", len(matrix1[0]), len(matrix1Val)))
+		}
+		if len(matrix1Val) != len(matrix2) {
+			return errors.New(fmt.Sprintf("Length of matrix1 sub-items must match the matrix2 columns/length [Expected: %v, Got: %v]", len(matrix1Val), len(matrix2)))
+		}
+	}
+	// validate matrix2 sub-items lengths/rows
+	for _, mat2Slice := range matrix2 {
+		if len(matrix2[0]) != len(mat2Slice) {
+			return errors.New(fmt.Sprintf("Length of matrix2 sub-items must be equal [Expected: %v, Got: %v]", len(matrix2[0]), len(mat2Slice)))
+		}
+	}
+	// compute the matrices multiplication
+	matrix1SlicesLength := len(matrix1)
+	matrix1SliceIndex := 0
+	for matrix1SliceIndex < matrix1SlicesLength {
+		// compute the matrix multiplication for each of the matrix1 slices and matrix2 slices
+		var multiResult []T
+		err := MultiplyMatrix(matrix1[matrix1SliceIndex], matrix2, multiResult)
+		if err != nil {
+			result = [][]T{}
+			return err
+		}
+		result = append(result, multiResult)
+		matrix1SliceIndex += 1
+	}
+	return nil
+}
+
+// MultiplyMatrices2 - DEPRECATED | TODO: REMOVE POST-TESTING
+func MultiplyMatrices2[T float64 | int64](matrix1 [][]T, matrix2 [][]T, result [][]T) error {
 	// initialize the matrix result
 	result = [][]T{}
 	// validate matrix1 and matrix2 length
@@ -298,13 +378,10 @@ func MultiplyMatrices[T float64 | int64](matrix1 [][]T, matrix2 [][]T, result []
 			return errors.New(fmt.Sprintf("Length of matrix1 sub-items must be the same [%v]", len(matrix1[0])))
 		}
 	}
-	if len(matrix1[0]) != len(matrix2[0]) {
-		return errors.New(fmt.Sprintf("Length of matrix1 sub-items must be the same as the number of columns of matrix2 sub-items [%v]", len(matrix2[0])))
-	}
 	// validate matrix2 values' lengths
 	for _, matrix2Val := range matrix2 {
 		if len(matrix1[0]) != len(matrix2Val) {
-			return errors.New(fmt.Sprintf("Length of matrix1 sub-items must be the same as the number of columns of matrix2 sub-items [%v]", len(matrix2Val)))
+			return errors.New(fmt.Sprintf("Length of matrix1 sub-items [%v] must be the same as the number of columns of matrix2 sub-items [%v]", len(matrix1[0]), len(matrix2Val)))
 		}
 	}
 	// compute the matrices multiplication
@@ -314,24 +391,23 @@ func MultiplyMatrices[T float64 | int64](matrix1 [][]T, matrix2 [][]T, result []
 	mat2Index := 0
 	for mat1Index < matrix1Length {
 		mat1Val := matrix1[mat1Index]
-		mat1Columns := len(mat1Val)
-		mat1ColumnIndex := 0
-		matColumnSum := T(0)
+		matColumns := len(mat1Val)
+		matColumnIndex := 0
 		var matrixMulResult []T
-		for mat1ColumnIndex < mat1Columns {
-			// TODO: compute sum of all the multiplications of the matrix2 items at column mat1ColumnIndex
+		for matColumnIndex < matColumns {
+			// TODO: compute sum of all the multiplications of the matrix2 items at column matColumnIndex
+			matColumnSum := T(0)
 			for mat2Index < matrix2Length {
 				//mat2Val := matrix2[mat2Index]
 				mat2ColumnIndex := 0
-				for mat2ColumnIndex < mat1Columns {
-					matColumnSum += matrix2[mat2Index][mat1ColumnIndex] * matrix1[mat1Index][mat2ColumnIndex]
+				for mat2ColumnIndex < matColumns {
+					matColumnSum += matrix2[mat2Index][matColumnIndex] * matrix1[mat1Index][mat2ColumnIndex]
 					mat2ColumnIndex += 1
 				}
-
 				mat2Index += 1
 			}
 			matrixMulResult = append(matrixMulResult, matColumnSum)
-			mat1ColumnIndex += 1
+			matColumnIndex += 1
 		}
 		result = append(result, matrixMulResult)
 		mat1Index += 1
