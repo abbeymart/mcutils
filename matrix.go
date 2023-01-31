@@ -299,12 +299,12 @@ func MultiplyMatrices[T float64 | int64](matrix1 [][]T, matrix2 [][]T, result []
 		}
 	}
 	if len(matrix1[0]) != len(matrix2[0]) {
-		return errors.New(fmt.Sprintf("Length of matrix1 sub-items must be the same as the number of columns in matrix2 [%v]", len(matrix2[0])))
+		return errors.New(fmt.Sprintf("Length of matrix1 sub-items must be the same as the number of columns of matrix2 sub-items [%v]", len(matrix2[0])))
 	}
 	// validate matrix2 values' lengths
 	for _, matrix2Val := range matrix2 {
 		if len(matrix1[0]) != len(matrix2Val) {
-			return errors.New(fmt.Sprintf("Length of matrix1[0] must be the same as the number of columns in matrix2 [%v]", len(matrix2Val)))
+			return errors.New(fmt.Sprintf("Length of matrix1 sub-items must be the same as the number of columns of matrix2 sub-items [%v]", len(matrix2Val)))
 		}
 	}
 	// compute the matrices multiplication
@@ -319,9 +319,15 @@ func MultiplyMatrices[T float64 | int64](matrix1 [][]T, matrix2 [][]T, result []
 		matColumnSum := T(0)
 		var matrixMulResult []T
 		for mat1ColumnIndex < mat1Columns {
-			// compute sum of all the multiplications of the matrix2 items at column mat1ColumnIndex
+			// TODO: compute sum of all the multiplications of the matrix2 items at column mat1ColumnIndex
 			for mat2Index < matrix2Length {
-				matColumnSum += matrix2[mat2Index][mat1ColumnIndex] * matrix1[mat1Index][mat1ColumnIndex]
+				//mat2Val := matrix2[mat2Index]
+				mat2ColumnIndex := 0
+				for mat2ColumnIndex < mat1Columns {
+					matColumnSum += matrix2[mat2Index][mat1ColumnIndex] * matrix1[mat1Index][mat2ColumnIndex]
+					mat2ColumnIndex += 1
+				}
+
 				mat2Index += 1
 			}
 			matrixMulResult = append(matrixMulResult, matColumnSum)
