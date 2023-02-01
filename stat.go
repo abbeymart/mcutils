@@ -52,8 +52,8 @@ func Variance(arr []float64) float64 {
 	return meanSquareSum / float64(arrLength)
 }
 
-// StandardDeviation function returns the standard-deviation value from a slice of type float.
-func StandardDeviation(arr []float64) float64 {
+// SampleStandardDeviation function returns the standard-deviation value from a sample-data of slice of type float.
+func SampleStandardDeviation(arr []float64) float64 {
 	deltaSquareSum := 0.00
 	arrLength := len(arr)
 	mean := Mean(arr)
@@ -61,6 +61,17 @@ func StandardDeviation(arr []float64) float64 {
 		deltaSquareSum += math.Pow(val-mean, 2)
 	}
 	return math.Sqrt(deltaSquareSum / float64(arrLength-1))
+}
+
+// PopulationStandardDeviation function returns the standard-deviation value from a population/complete-data of slice of type float.
+func PopulationStandardDeviation(arr []float64) float64 {
+	deltaSquareSum := 0.00
+	arrLength := len(arr)
+	mean := Mean(arr)
+	for _, val := range arr {
+		deltaSquareSum += math.Pow(val-mean, 2)
+	}
+	return math.Sqrt(deltaSquareSum / float64(arrLength))
 }
 
 // Min function returns the minimum value from a slice of type T (int or float).
@@ -118,6 +129,11 @@ func Quartiles[T Number](arr []T) []T {
 func Percentiles[T Number](arr []T) []T {
 
 	return []T{}
+}
+
+// IQRange InterQuartileRange returns the difference between the first and third quartiles (Q1 and Q3)
+func IQRange() {
+
 }
 
 func MeanSquareError() {
