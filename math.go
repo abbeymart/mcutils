@@ -5,10 +5,10 @@
 package mcutils
 
 import (
-	"fmt"
 	"math"
 )
 
+// Fibos function returns slice of fibonacci numbers from 1 up to the specified limit (num).
 func Fibos(num uint) []uint {
 	var fiboArray = []uint{1, 1}
 	var i uint = 0
@@ -21,10 +21,11 @@ func Fibos(num uint) []uint {
 	return fiboArray
 }
 
-func NaturalNumbers(count uint, cntChannel chan<- uint) {
+// NaturalNumbers function generates series positive numbers from 0 up to specified limit (num).
+func NaturalNumbers(num uint, cntChannel chan<- uint) {
 	// use channels to implement generator to send/yield/generate natural numbers
 	var cnt uint
-	for cnt = 0; cnt < count; cnt++ {
+	for cnt = 0; cnt < num; cnt++ {
 		cntChannel <- cnt
 	}
 	if cntChannel != nil {
@@ -32,8 +33,12 @@ func NaturalNumbers(count uint, cntChannel chan<- uint) {
 	}
 }
 
+// FactorialTail function returns the factorial value from 1 to the specified limit (num).
+// Accumulator value should be set to 1 (default)
 func FactorialTail(num uint, acc uint) uint {
-	acc = 1
+	if acc != 1 {
+		acc = 1
+	}
 	if num <= 1 {
 		return acc
 	}
@@ -41,59 +46,67 @@ func FactorialTail(num uint, acc uint) uint {
 	return FactorialTail(num-1, num*acc)
 }
 
-func FactNumGen(num uint) chan uint {
-	var factRes = make(chan uint, num)
-	var x uint
-	for x = 1; x <= num; x++ {
-		factRes <- x
+// FactNumGen function generates series of the factorial value of 1 to num.
+func FactNumGen(num uint, factChannel chan<- int) {
+	var x int
+	for x = 1; x <= int(num); x++ {
+		factChannel <- x
 	}
-	return factRes
+	if factChannel != nil {
+		close(factChannel)
+	}
 }
 
-func FactorialGen(num uint) uint {
+// FactorialGen function returns the factorial value of 1 to num, using number-generator via channel.
+func FactorialGen(num uint) int {
 	// using the generator function, via channel, no recursion
-	var result uint = 1
-	for v := range FactNumGen(num) {
+	var result int = 1
+	factChannel := make(chan int, num)
+	go FactNumGen(num, factChannel)
+	for v := range factChannel {
 		result *= v
 	}
 	return result
 }
 
-func FactorialGen2(num uint) uint {
+// FactorialGen2 function returns the factorial value of 1 to num, using simple iteration method.
+func FactorialGen2(num uint) int {
 	// using number-series, no recursion
-	var result uint = 1
-	var v uint
-	for v = 1; v < num+1; v++ {
+	var result = 1
+	var v int
+	for v = 1; v <= int(num); v++ {
 		result *= v
 	}
 	return result
 }
 
-func FiboTail(n int, current int, next int) int {
-	if n == 0 {
+// FiboTail function returns last fibonacci numbers up to the limit (num).
+// current and next parameters should be set to 1 (default) - TODO: review/clarify/test.
+func FiboTail(num int, current int, next int) int {
+	if current != 1 {
+		current = 1
+	}
+	if num == 0 {
 		return current
 	}
 	// using the tail call optimization
-	return FiboTail(n-1, current, current+next)
+	return FiboTail(num-1, current, current+next)
 }
 
-func FiboArray(num uint) [][]uint {
+// FiboArray function returns the slice of pairs of fibonacci numbers.
+func FiboArray(num uint, result [][]uint) {
 	// no recursion, memoization using array
-	var c, d uint = 0, 1
-	var result [][]uint
-	var fibRes uint = 0 // track current fibo-value
+	result = [][]uint{}
+	var a, b uint = 0, 1
 	for i := 0; i < int(num); i++ {
-		c, d = d, c+d
-		result = append(result, []uint{c, d})
-		fibRes = c
+		a, b = b, a+b
+		result = append(result, []uint{a, b})
 	}
-	fmt.Printf("fib-result: %v", fibRes)
-	return result
 }
 
-func FiboSeries(num uint) chan<- uint {
+// FiboSeries function generates series of fibonacci numbers up to the specified limit (num).
+func FiboSeries(num uint, fiboChannel chan<- uint) {
 	// initial pairs / values
-	var fiboChannel = make(chan uint, num) // buffered channel
 	var a, b uint = 0, 1
 	var i uint = 0
 	for i < num {
@@ -101,9 +114,12 @@ func FiboSeries(num uint) chan<- uint {
 		a, b = b, a+b
 		i++
 	}
-	return fiboChannel
+	if fiboChannel != nil {
+		close(fiboChannel)
+	}
 }
 
+// PrimeNumbers function returns the prime numbers up to the limit if num.
 func PrimeNumbers(num int) (pNums []int) {
 next:
 	for outer := 2; outer < num; outer++ {
@@ -117,6 +133,7 @@ next:
 	return pNums
 }
 
+// IsPrime function determines if the number(n) is a prime number.
 func IsPrime(n int) bool {
 	// prime number count algorithm condition
 	s := math.Floor(math.Sqrt(float64(n)))
@@ -129,6 +146,7 @@ func IsPrime(n int) bool {
 	return n > 1
 }
 
+// Pythagoras function returns the number pairs and hypothesis values.
 func Pythagoras(limit uint) [][]uint {
 	var pResult [][]uint
 	var a, b uint
@@ -143,6 +161,7 @@ func Pythagoras(limit uint) [][]uint {
 	return pResult
 }
 
+// PythagorasGen function generates series the number pairs and hypothesis values.
 func PythagorasGen(limit uint, pythagorasChan chan []uint) {
 	var a, b uint
 	for a = 1; a <= limit; a++ {
@@ -158,7 +177,7 @@ func PythagorasGen(limit uint, pythagorasChan chan []uint) {
 	}
 }
 
-// NaturalNumbersGen generates finite natural numbers.
+// NaturalNumbersGen function generates finite natural numbers.
 func NaturalNumbersGen(num uint, naturalChan chan<- uint) {
 	// use channels to implement generator to yield/generate finite natural numbers
 	var cnt uint
@@ -170,7 +189,7 @@ func NaturalNumbersGen(num uint, naturalChan chan<- uint) {
 	}
 }
 
-// NaturalNumbersGenInf generates infinite natural numbers.
+// NaturalNumbersGenInf function generates infinite natural numbers.
 func NaturalNumbersGenInf(naturalChan chan<- uint, stopFunc func() bool) {
 	// use channels to implement generator to yield/generate infinite natural numbers
 	for cnt := 0; ; cnt++ {
