@@ -35,6 +35,23 @@ func Median(arr []float64) float64 {
 	return (arr[medianIndex1] + arr[medianIndex2]) / 2
 }
 
+// Range function returns the range of the slice type of float.
+func Range[T Number](arr []T) T {
+	min, max := MinMax(arr)
+	return max - min
+}
+
+// Variance function returns the variance of the mean-square-value from a slice of type float.
+func Variance(arr []float64) float64 {
+	meanSquareSum := 0.00
+	arrLength := len(arr)
+	mean := Mean(arr)
+	for _, val := range arr {
+		meanSquareSum += math.Pow(val-mean, 2)
+	}
+	return meanSquareSum / float64(arrLength)
+}
+
 // StandardDeviation function returns the standard-deviation value from a slice of type float.
 func StandardDeviation(arr []float64) float64 {
 	deltaSquareSum := 0.00
@@ -89,15 +106,25 @@ func MinMax[T Number](arr []T) (min T, max T) {
 	return
 }
 
+// Quartiles returns slice-values that separate the data into four equal parts.
+// Q0, Q1, Q2, Q3 & Q4
+func Quartiles[T Number](arr []T) []T {
+
+	return []T{}
+}
+
+// Percentiles returns slice-values that separate the data into 100 equal parts.
+// Examples: 25%[Q1], 50%[Q2], 75%[Q3]
+func Percentiles[T Number](arr []T) []T {
+
+	return []T{}
+}
+
 func MeanSquareError() {
 
 }
 
 func MeanSquareRootError() {
-
-}
-
-func Variance() {
 
 }
 
