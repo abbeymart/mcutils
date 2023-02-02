@@ -10,47 +10,47 @@ import (
 )
 
 // Mean function returns the mean or average value from a slice of type float.
-func Mean(arr []float64) float64 {
+func Mean[T Number](arr []T) float64 {
 	var sum = 0.00
 	arrLength := len(arr)
 	for _, v := range arr {
-		sum += v
+		sum += float64(v)
 	}
 	return sum / float64(arrLength)
 }
 
 // GeometricMean function returns the geometric mean of a slice of type float.
-func GeometricMean(arr []float64) float64 {
+func GeometricMean[T Number](arr []T) float64 {
 	var multi = 0.00
 	arrLength := len(arr)
 	for _, v := range arr {
-		multi *= v
+		multi *= float64(v)
 	}
 	return math.Pow(multi, float64(1/arrLength))
 }
 
 // Median function returns the mid or median value from a slice of type float.
-func Median(arr []float64) float64 {
+func Median[T Number](arr []T) float64 {
 	// sort numbers, ascending order
-	sort.Float64s(arr)
+	sort.SliceStable(arr, func(i, j int) bool { return arr[i] < arr[j] })
 	arrLength := len(arr)
 	// if slice-items count is odd
 	if arrLength%2 != 0 {
 		medianIndex := math.Floor(float64(arrLength / 2))
-		return arr[uint(medianIndex)]
+		return float64(arr[uint(medianIndex)])
 	}
 	// if slice-items count is even
 	medianIndex2 := arrLength / 2
 	medianIndex1 := medianIndex2 - 1
-	return (arr[medianIndex1] + arr[medianIndex2]) / 2
+	return float64((arr[medianIndex1] + arr[medianIndex2]) / 2)
 }
 
 // Mode function returns the mode(most frequently occurring value(s)) of a slice of type float.
-func Mode(arr []float64) []CounterValue[float64] {
+func Mode[T Number](arr []T) []CounterValue[T] {
 	// Obtain the counter values for the arr items
-	result := ArrayValue[float64](arr)
+	result := ArrayValue[T](arr)
 	arrCounters := result.Counter()
-	var modes []CounterValue[float64]
+	var modes []CounterValue[T]
 	// get the maximum or the highest occurrence of the arrCounter values
 	var counters []int
 	for _, cVal := range arrCounters {
@@ -69,11 +69,11 @@ func Mode(arr []float64) []CounterValue[float64] {
 }
 
 // Frequency function returns the frequency / occurrence of a slice of type float.
-func Frequency(arr []float64) []CounterValue[float64] {
+func Frequency[T Number](arr []T) []CounterValue[T] {
 	// Obtain the counter values for the arr items
-	result := ArrayValue[float64](arr)
+	result := ArrayValue[T](arr)
 	arrCounters := result.Counter()
-	var modes []CounterValue[float64]
+	var modes []CounterValue[T]
 	// compute the frequency/occurrence
 	for _, cVal := range arrCounters {
 		modes = append(modes, cVal)
@@ -88,34 +88,34 @@ func Range[T Number](arr []T) T {
 }
 
 // Variance function returns the variance of the mean-square-value from a slice of type float.
-func Variance(arr []float64) float64 {
+func Variance[T Number](arr []T) float64 {
 	meanSquareSum := 0.00
 	arrLength := len(arr)
 	mean := Mean(arr)
 	for _, val := range arr {
-		meanSquareSum += math.Pow(val-mean, 2)
+		meanSquareSum += math.Pow(float64(val)-mean, 2)
 	}
 	return meanSquareSum / float64(arrLength)
 }
 
 // SampleStandardDeviation function returns the standard-deviation value from a sample-data of slice of type float.
-func SampleStandardDeviation(arr []float64) float64 {
+func SampleStandardDeviation[T Number](arr []T) float64 {
 	deltaSquareSum := 0.00
 	arrLength := len(arr)
 	mean := Mean(arr)
 	for _, val := range arr {
-		deltaSquareSum += math.Pow(val-mean, 2)
+		deltaSquareSum += math.Pow(float64(val)-mean, 2)
 	}
 	return math.Sqrt(deltaSquareSum / float64(arrLength-1))
 }
 
 // PopulationStandardDeviation function returns the standard-deviation value from a population/complete-data of slice of type float.
-func PopulationStandardDeviation(arr []float64) float64 {
+func PopulationStandardDeviation[T Number](arr []T) float64 {
 	deltaSquareSum := 0.00
 	arrLength := len(arr)
 	mean := Mean(arr)
 	for _, val := range arr {
-		deltaSquareSum += math.Pow(val-mean, 2)
+		deltaSquareSum += math.Pow(float64(val)-mean, 2)
 	}
 	return math.Sqrt(deltaSquareSum / float64(arrLength))
 }
@@ -178,8 +178,11 @@ func Percentiles[T Number](arr []T) []T {
 }
 
 // IQRange InterQuartileRange returns the difference between the first and third quartiles (Q1 and Q3)
-func IQRange[T Number](arr []T) T {
+func IQRange[T Number](arr []T) float64 {
+	// sort numbers, ascending order
+	sort.SliceStable(arr, func(i, j int) bool { return arr[i] < arr[j] })
 	// Determine the Q1, Q2, Q3 and Q4 values from arr
+	// IQR = Q3 - Q1
 	// Determine the numbers of elements
 	arrLength := len(arr)
 	// Determine if the arr is even or odd

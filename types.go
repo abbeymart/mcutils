@@ -18,7 +18,7 @@ const (
 )
 
 type ValueType interface {
-	string | int64 | float64 | bool
+	string | int | int64 | float64 | float32 | bool
 }
 
 type ValueTypeSlice interface {
