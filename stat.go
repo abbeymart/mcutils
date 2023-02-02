@@ -183,6 +183,7 @@ func IQRange[T Number](arr []T) float64 {
 	sort.SliceStable(arr, func(i, j int) bool { return arr[i] < arr[j] })
 	// Determine the Q1, Q2, Q3 and Q4 values from arr
 	// IQR = Q3 - Q1
+	IQR := 0.00
 	// Determine the numbers of elements
 	arrLength := len(arr)
 	// Determine if the arr is even or odd
@@ -190,14 +191,17 @@ func IQRange[T Number](arr []T) float64 {
 	if arrLength%2 == 0 {
 		isEven = true
 	}
-
+	quarterLength := int64(math.Floor(float64(arrLength) / 4))
 	if isEven {
-
+		Q1 := arr[quarterLength-1]
+		Q3 := arr[quarterLength*2-1]
+		IQR = float64(Q3 - Q1)
 	} else {
-
+		Q1 := (arr[quarterLength] + arr[quarterLength+1]) / 2
+		Q3 := (arr[quarterLength*2] + arr[quarterLength*2+1]) / 2
+		IQR = float64(Q3 - Q1)
 	}
-
-	return 0.00
+	return IQR
 }
 
 func MeanSquareError() {
