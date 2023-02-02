@@ -264,3 +264,69 @@ func ReverseArrayFloatGen(arr []float64, arrChan chan<- float64) {
 		close(arrChan)
 	}
 }
+
+// TODO: review and remove redundancies
+
+// ReverseArray2 returns the reverse values of the specified array/slice [generic type]
+func ReverseArray2[T ValueType](arr []T) []T {
+	// arr and arrChan must be of the same type: int, float
+	var reverseArray []T
+	for i := len(arr) - 1; i >= 0; i-- {
+		reverseArray = append(reverseArray, arr[i])
+	}
+	return reverseArray
+}
+
+// ReverseArray1 returns the reverse values of the specified array/slice, DEPRECATED - use ReverseArray
+func ReverseArray1(arr []interface{}) []interface{} {
+	// arr and arrChan must be of the same type: int, float
+	var reverseArray []interface{}
+	for i := len(arr) - 1; i >= 0; i-- {
+		reverseArray = append(reverseArray, arr[i])
+	}
+	return reverseArray
+}
+
+func ReverseArrayInt2(arr []int) []int {
+	var reverseArray []int
+	for i := len(arr) - 1; i >= 0; i-- {
+		reverseArray = append(reverseArray, arr[i])
+	}
+	return reverseArray
+}
+
+func ReverseArrayFloat2(arr []float64) []float64 {
+	var reverseArray []float64
+	for i := len(arr) - 1; i >= 0; i-- {
+		reverseArray = append(reverseArray, arr[i])
+	}
+	return reverseArray
+}
+
+// ReverseArrayGenerator2 sequentially generates reverse values of the specified array/slice
+func ReverseArrayGenerator2[T ValueType](arr []T, arrChan chan T) {
+	// arr and arrChan must be of the same type: int, float
+	for i := len(arr) - 1; i >= 0; i-- {
+		arrChan <- arr[i]
+	}
+}
+
+// ReverseArrayGen sequentially generates reverse values of the specified array/slice - DEPRECATED - use // ReverseArrayGeneratorGeneric
+func ReverseArrayGen(arr []interface{}, arrChan chan interface{}) {
+	// arr and arrChan must be of the same type: int, float
+	for i := len(arr) - 1; i >= 0; i-- {
+		arrChan <- arr[i]
+	}
+}
+
+func ReverseArrayIntGen2(arr []int, arrChan chan int) {
+	for i := len(arr) - 1; i >= 0; i-- {
+		arrChan <- arr[i]
+	}
+}
+
+func ReverseArrayFloatGen2(arr []float64, arrChan chan float64) {
+	for i := len(arr) - 1; i >= 0; i-- {
+		arrChan <- arr[i]
+	}
+}

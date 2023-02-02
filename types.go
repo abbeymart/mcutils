@@ -22,11 +22,11 @@ type ValueType interface {
 }
 
 type ValueTypeSlice interface {
-	[]string | []int64 | []float64 | []bool | []map[string]interface{}
+	[]string | int | []int64 | []float64 | float32 | []bool | []map[string]interface{}
 }
 
 type Number interface {
-	int64 | float64
+	int | int64 | float64 | float32
 }
 
 type TestFuncType[T ValueType] func(val T) bool

@@ -23,6 +23,136 @@ import (
 	"time"
 )
 
+// counters
+
+type CounterValue[T ValueType] struct {
+	Count int
+	Value T
+}
+type CounterObjectValue[T map[string]interface{} | struct{}] struct {
+	Count int
+	Value T
+}
+type ArrayValue[T ValueType] []T
+
+//type ArrayValue[T ValueType] struct {
+//	Value []T
+//}
+
+type ArrayOfString []string
+type ArrayOfInt []int
+type ArrayOfFloat []float64
+type DataCount map[string]int
+type SliceObjectType[T map[string]interface{}] []T
+type CounterResult[T ValueType] map[string]CounterValue[T]
+type ObjectCounterResult[T map[string]interface{} | struct{}] map[string]CounterObjectValue[T]
+
+// Counter method returns the unique counts of the specified array/slice values[int, float, string and bool]
+func (val ArrayValue[T]) Counter() CounterResult[T] {
+	var count = make(CounterResult[T])
+	for _, it := range val {
+		// stringify it=>key
+		var itStr = fmt.Sprintf("%v", it)
+		if v, ok := count[itStr]; ok && v.Count > 0 {
+			count[itStr] = CounterValue[T]{
+				Count: v.Count + 1,
+				Value: it,
+			}
+		} else {
+			count[itStr] = CounterValue[T]{
+				Count: 1,
+				Value: it,
+			}
+		}
+	}
+	return count
+}
+
+// SliceObjectCounter method returns the unique counts of the specified array/slice of map[string]interface{} values
+func (val SliceObjectType[T]) SliceObjectCounter() ObjectCounterResult[T] {
+	var count ObjectCounterResult[T]
+	for _, it := range val {
+		// stringify it=>key
+		jsonVal, _ := json.Marshal(it)
+		var itStr = string(jsonVal)
+		if v, ok := count[itStr]; ok && v.Count > 0 {
+			count[itStr] = CounterObjectValue[T]{
+				Count: v.Count + 1,
+				Value: it,
+			}
+		} else {
+			count[itStr] = CounterObjectValue[T]{
+				Count: 1,
+				Value: it,
+			}
+		}
+	}
+	return count
+}
+
+// Set method returns the slice of set values for a generic type T
+func (val ArrayValue[T]) Set() []T {
+	// refactor, using counter method
+	var count = val.Counter()
+	// compute set values
+	setValue := make([]T, len(count))
+	for _, value := range count {
+		setValue = append(setValue, value.Value)
+	}
+	return setValue
+}
+
+func (val ArrayOfString) SetOfString() []string {
+	var count = make(map[string]int)
+	for _, itVal := range val {
+		if v, ok := count[itVal]; ok && v > 0 {
+			count[itVal] = v + 1
+		} else {
+			count[itVal] = 1
+		}
+	}
+	// compute set values
+	setValue := make([]string, len(count))
+	for keyValue := range count {
+		setValue = append(setValue, keyValue)
+	}
+	return setValue
+}
+
+func (val ArrayOfInt) SetOfInt() []int {
+	var count = make(map[int]int)
+	for _, itVal := range val {
+		if v, ok := count[itVal]; ok && v > 0 {
+			count[itVal] = v + 1
+		} else {
+			count[itVal] = 1
+		}
+	}
+	// compute set values
+	setValue := make([]int, len(count))
+	for keyValue := range count {
+		setValue = append(setValue, keyValue)
+	}
+	return setValue
+}
+
+func (val ArrayOfFloat) SetOfFloat() []float64 {
+	var count = make(map[float64]int)
+	for _, itVal := range val {
+		if v, ok := count[itVal]; ok && v > 0 {
+			count[itVal] = v + 1
+		} else {
+			count[itVal] = 1
+		}
+	}
+	// compute set values
+	setValue := make([]float64, len(count))
+	for keyValue := range count {
+		setValue = append(setValue, keyValue)
+	}
+	return setValue
+}
+
 // SeparatorFieldToCamelCase transforms a separated/underscore name to camel-case name
 func SeparatorFieldToCamelCase(text string, sep string) (string, error) {
 	// validate acceptable separators [" ", "_", "__", ".", "|"]

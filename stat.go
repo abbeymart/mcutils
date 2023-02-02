@@ -19,6 +19,16 @@ func Mean(arr []float64) float64 {
 	return sum / float64(arrLength)
 }
 
+// GeometricMean function returns the geometric mean of a slice of type float.
+func GeometricMean(arr []float64) float64 {
+	var multi = 0.00
+	arrLength := len(arr)
+	for _, v := range arr {
+		multi *= v
+	}
+	return math.Pow(multi, float64(1/arrLength))
+}
+
 // Median function returns the mid or median value from a slice of type float.
 func Median(arr []float64) float64 {
 	// sort numbers, ascending order
@@ -33,6 +43,42 @@ func Median(arr []float64) float64 {
 	medianIndex2 := arrLength / 2
 	medianIndex1 := medianIndex2 - 1
 	return (arr[medianIndex1] + arr[medianIndex2]) / 2
+}
+
+// Mode function returns the mode(most frequently occurring value(s)) of a slice of type float.
+func Mode(arr []float64) []CounterValue[float64] {
+	// Obtain the counter values for the arr items
+	result := ArrayValue[float64](arr)
+	arrCounters := result.Counter()
+	var modes []CounterValue[float64]
+	// get the maximum or the highest occurrence of the arrCounter values
+	var counters []int
+	for _, cVal := range arrCounters {
+		counters = append(counters, cVal.Count)
+	}
+	max := Max(counters)
+	// compute mode/modes, i.e. modal value greater than 1
+	if max > 1 {
+		for _, cVal := range arrCounters {
+			if cVal.Count == max {
+				modes = append(modes, cVal)
+			}
+		}
+	}
+	return modes
+}
+
+// Frequency function returns the frequency / occurrence of a slice of type float.
+func Frequency(arr []float64) []CounterValue[float64] {
+	// Obtain the counter values for the arr items
+	result := ArrayValue[float64](arr)
+	arrCounters := result.Counter()
+	var modes []CounterValue[float64]
+	// compute the frequency/occurrence
+	for _, cVal := range arrCounters {
+		modes = append(modes, cVal)
+	}
+	return modes
 }
 
 // Range function returns the range of the slice type of float.
@@ -132,8 +178,23 @@ func Percentiles[T Number](arr []T) []T {
 }
 
 // IQRange InterQuartileRange returns the difference between the first and third quartiles (Q1 and Q3)
-func IQRange() {
+func IQRange[T Number](arr []T) T {
+	// Determine the Q1, Q2, Q3 and Q4 values from arr
+	// Determine the numbers of elements
+	arrLength := len(arr)
+	// Determine if the arr is even or odd
+	isEven := false
+	if arrLength%2 == 0 {
+		isEven = true
+	}
 
+	if isEven {
+
+	} else {
+
+	}
+
+	return 0.00
 }
 
 func MeanSquareError() {
