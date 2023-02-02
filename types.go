@@ -54,38 +54,49 @@ type Supplier[R ValueType] func() R
 type Comparator[T ValueType] func(val1 T, val2 T) int
 
 type StringType struct {
-	value string
+	Value string `json:"Value"`
 }
 type FloatType struct {
-	value float64
+	Value float64 `json:"value"`
 }
 type BoolType struct {
-	value bool
+	Value bool `json:"value"`
 }
 type IntType struct {
-	value int
+	Value int `json:"value"`
 }
 type GenericType[T ValueType] struct {
-	value T
+	Value T `json:"value"`
 }
 type StringSliceType struct {
-	value []string
+	Value []string `json:"value"`
 }
 type FloatSliceType struct {
-	value []float64
+	Value []float64 `json:"value"`
 }
 
 //type FloatSliceType []float64
 
 type BoolSliceType struct {
-	value []bool
+	Value []bool `json:"Value"`
 }
 
 //type BoolSliceType []bool
 
 type IntSliceType struct {
-	value []int
+	Value []int `json:"Value"`
 }
 type GenericSliceType[T ValueType] struct {
-	value []T
+	Value []T `json:"Value"`
+}
+
+type QuartilesType struct {
+	Min   float64 `json:"min"` // Lowest value
+	Q1    float64 `json:"q1"`
+	Q2    float64 `json:"q2"` // Median
+	Q3    float64 `json:"q3"`
+	Q4    float64 `json:"q4"` // Highest value, Max
+	IQR   float64 `json:"IQR"`
+	Max   float64 `json:"max"`   // Highest value, Q4
+	Range float64 `json:"range"` // Q3 - Q1
 }

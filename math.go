@@ -33,8 +33,8 @@ func NaturalNumbers(num uint, cntChannel chan<- uint) {
 	}
 }
 
-// FactorialTail function returns the factorial value from 1 to the specified limit (num).
-// Accumulator value should be set to 1 (default)
+// FactorialTail function returns the factorial Value from 1 to the specified limit (num).
+// Accumulator Value should be set to 1 (default)
 func FactorialTail(num uint, acc uint) uint {
 	if acc != 1 {
 		acc = 1
@@ -46,7 +46,7 @@ func FactorialTail(num uint, acc uint) uint {
 	return FactorialTail(num-1, num*acc)
 }
 
-// FactNumGen function generates series of the factorial value of 1 to num.
+// FactNumGen function generates series of the factorial Value of 1 to num.
 func FactNumGen(num uint, factChannel chan<- int) {
 	var x int
 	for x = 1; x <= int(num); x++ {
@@ -57,7 +57,7 @@ func FactNumGen(num uint, factChannel chan<- int) {
 	}
 }
 
-// FactorialGen function returns the factorial value of 1 to num, using number-generator via channel.
+// FactorialGen function returns the factorial Value of 1 to num, using number-generator via channel.
 func FactorialGen(num uint) int {
 	// using the generator function, via channel, no recursion
 	var result int = 1
@@ -69,7 +69,7 @@ func FactorialGen(num uint) int {
 	return result
 }
 
-// FactorialGen2 function returns the factorial value of 1 to num, using simple iteration method.
+// FactorialGen2 function returns the factorial Value of 1 to num, using simple iteration method.
 func FactorialGen2(num uint) int {
 	// using number-series, no recursion
 	var result = 1
@@ -138,7 +138,7 @@ func IsPrime(n int) bool {
 	// prime number count algorithm condition
 	s := math.Floor(math.Sqrt(float64(n)))
 	for x := 2; x <= int(s); x++ {
-		//Perform remainder of n for all numbers from 2 to s(short-algorithm-value)/n-1
+		//Perform remainder of n for all numbers from 2 to s(short-algorithm-Value)/n-1
 		if n%x == 0 {
 			return false
 		}

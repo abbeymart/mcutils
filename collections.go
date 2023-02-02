@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// Index functions returns the index of the specified value (for string, it's case-insensitive)
+// Index functions returns the index of the specified Value (for string, it's case-insensitive)
 func Index[T ValueType](arr []T, val T) int {
 	// types - string, int, float, bool
 	for i, value := range arr {
@@ -16,7 +16,7 @@ func Index[T ValueType](arr []T, val T) int {
 	return -1
 }
 
-// IndexCaseSensitive functions returns the index of the specified value (for string, it's case-sensitive)
+// IndexCaseSensitive functions returns the index of the specified Value (for string, it's case-sensitive)
 func IndexCaseSensitive[T ValueType](arr []T, val T) int {
 	// types - string, int, float, bool
 	for i, value := range arr {
@@ -27,7 +27,7 @@ func IndexCaseSensitive[T ValueType](arr []T, val T) int {
 	return -1
 }
 
-// ArrayContains check if a slice of generic type T contains/includes a value of type T  (for string, it's case-insensitive)
+// ArrayContains check if a slice of generic type T contains/includes a Value of type T  (for string, it's case-insensitive)
 func ArrayContains[T ValueType](arr []T, str T) bool {
 	for _, a := range arr {
 		if a == str || strings.ToLower(fmt.Sprintf("%v", a)) == strings.ToLower(fmt.Sprintf("%v", str)) {
@@ -37,7 +37,7 @@ func ArrayContains[T ValueType](arr []T, str T) bool {
 	return false
 }
 
-// ArrayContainsCaseSensitive check if a slice of generic type T contains/includes a value of type T  (for string, it's case-sensitive)
+// ArrayContainsCaseSensitive check if a slice of generic type T contains/includes a Value of type T  (for string, it's case-sensitive)
 func ArrayContainsCaseSensitive[T ValueType](arr []T, str T) bool {
 	for _, a := range arr {
 		if a == str {
@@ -47,7 +47,7 @@ func ArrayContainsCaseSensitive[T ValueType](arr []T, str T) bool {
 	return false
 }
 
-// ArrayStringContains check if a slice of string contains/includes a string value, case-insensitive
+// ArrayStringContains check if a slice of string contains/includes a string Value, case-insensitive
 func ArrayStringContains(arr []string, val string) bool {
 	for _, a := range arr {
 		if strings.ToLower(a) == strings.ToLower(val) {
@@ -57,7 +57,7 @@ func ArrayStringContains(arr []string, val string) bool {
 	return false
 }
 
-// ArrayStringContainsCaseSensitive check if a slice of string contains/includes a string value, case-sensitive
+// ArrayStringContainsCaseSensitive check if a slice of string contains/includes a string Value, case-sensitive
 func ArrayStringContainsCaseSensitive(arr []string, val string) bool {
 	for _, a := range arr {
 		if a == val {
@@ -67,7 +67,7 @@ func ArrayStringContainsCaseSensitive(arr []string, val string) bool {
 	return false
 }
 
-// ArrayIntContains check if a slice of int contains/includes an int value
+// ArrayIntContains check if a slice of int contains/includes an int Value
 func ArrayIntContains(arr []int, val int) bool {
 	for _, a := range arr {
 		if a == val {
@@ -77,7 +77,7 @@ func ArrayIntContains(arr []int, val int) bool {
 	return false
 }
 
-// ArrayFloatContains check if a slice of int contains/includes a float value
+// ArrayFloatContains check if a slice of int contains/includes a float Value
 func ArrayFloatContains(arr []float64, str float64) bool {
 	for _, a := range arr {
 		if a == str {
@@ -111,14 +111,14 @@ func All[T ValueType](arr []T, testFunc TestFuncType[T]) bool {
 
 // Map function map slice of type T, by the mapFunc.
 func Map[T ValueType](arr []T, mapFunc func(T) T, result []T) {
-	// reset the result value
+	// reset the result Value
 	result = []T{}
 	for _, v := range arr {
 		result = append(result, mapFunc(v))
 	}
 }
 
-// MapGen function generates series of map value of type T and send to the mapChan channel.
+// MapGen function generates series of map Value of type T and send to the mapChan channel.
 func MapGen[T ValueType](arr []T, mapFunc func(T) T, mapChan chan<- T) {
 	for _, v := range arr {
 		mapChan <- mapFunc(v)
@@ -129,7 +129,7 @@ func MapGen[T ValueType](arr []T, mapFunc func(T) T, mapChan chan<- T) {
 	}
 }
 
-// MapInt function returns the mapped-slice-value of type int, based on the mapFunc.
+// MapInt function returns the mapped-slice-Value of type int, based on the mapFunc.
 func MapInt(arr []int, mapFunc func(int) int, result []int) {
 	result = []int{}
 	for _, v := range arr {
@@ -137,7 +137,7 @@ func MapInt(arr []int, mapFunc func(int) int, result []int) {
 	}
 }
 
-// MapFloat function returns the mapped-slice-value, of type float64, based on the mapFunc.
+// MapFloat function returns the mapped-slice-Value, of type float64, based on the mapFunc.
 func MapFloat(arr []float64, mapFunc func(float64) float64, result []float64) {
 	result = []float64{}
 	for _, v := range arr {
@@ -145,7 +145,7 @@ func MapFloat(arr []float64, mapFunc func(float64) float64, result []float64) {
 	}
 }
 
-// MapString function returns the mapped-slice-value, of type string, based on the mapFunc.
+// MapString function returns the mapped-slice-Value, of type string, based on the mapFunc.
 func MapString(arr []string, mapFunc func(string) string, result []string) {
 	result = []string{}
 	for _, v := range arr {
@@ -153,7 +153,7 @@ func MapString(arr []string, mapFunc func(string) string, result []string) {
 	}
 }
 
-// Filter function returns the filtered-slice-value, of type T, based on the filterFunc [generic].
+// Filter function returns the filtered-slice-Value, of type T, based on the filterFunc [generic].
 func Filter[T ValueType](arr []T, filterFunc func(T) bool, result []T) {
 	result = []T{}
 	for _, v := range arr {
@@ -163,7 +163,7 @@ func Filter[T ValueType](arr []T, filterFunc func(T) bool, result []T) {
 	}
 }
 
-// FilterGen function returns series filtered-value, of type T, based on the filterFunc [generic].
+// FilterGen function returns series filtered-Value, of type T, based on the filterFunc [generic].
 func FilterGen[T ValueType](arr []T, filterFunc func(T) bool, filterChan chan<- T) {
 	for _, v := range arr {
 		if filterFunc(v) {

@@ -9,7 +9,7 @@ import (
 	"sort"
 )
 
-// Mean function returns the mean or average value from a slice of type float.
+// Mean function returns the mean or average Value from a slice of type float.
 func Mean[T Number](arr []T) float64 {
 	var sum = 0.00
 	arrLength := len(arr)
@@ -29,7 +29,7 @@ func GeometricMean[T Number](arr []T) float64 {
 	return math.Pow(multi, float64(1/arrLength))
 }
 
-// Median function returns the mid or median value from a slice of type float.
+// Median function returns the mid or median Value from a slice of type float.
 func Median[T Number](arr []T) float64 {
 	// sort numbers, ascending order
 	sort.SliceStable(arr, func(i, j int) bool { return arr[i] < arr[j] })
@@ -45,7 +45,7 @@ func Median[T Number](arr []T) float64 {
 	return float64((arr[medianIndex1] + arr[medianIndex2]) / 2)
 }
 
-// Mode function returns the mode(most frequently occurring value(s)) of a slice of type float.
+// Mode function returns the mode(most frequently occurring Value(s)) of a slice of type float.
 func Mode[T Number](arr []T) []CounterValue[T] {
 	// Obtain the counter values for the arr items
 	result := ArrayValue[T](arr)
@@ -57,7 +57,7 @@ func Mode[T Number](arr []T) []CounterValue[T] {
 		counters = append(counters, cVal.Count)
 	}
 	max := Max(counters)
-	// compute mode/modes, i.e. modal value greater than 1
+	// compute mode/modes, i.e. modal Value greater than 1
 	if max > 1 {
 		for _, cVal := range arrCounters {
 			if cVal.Count == max {
@@ -87,7 +87,7 @@ func Range[T Number](arr []T) T {
 	return max - min
 }
 
-// Variance function returns the variance of the mean-square-value from a slice of type float.
+// Variance function returns the variance of the mean-square-Value from a slice of type float.
 func Variance[T Number](arr []T) float64 {
 	meanSquareSum := 0.00
 	arrLength := len(arr)
@@ -98,7 +98,7 @@ func Variance[T Number](arr []T) float64 {
 	return meanSquareSum / float64(arrLength)
 }
 
-// SampleStandardDeviation function returns the standard-deviation value from a sample-data of slice of type float.
+// SampleStandardDeviation function returns the standard-deviation Value from a sample-data of slice of type float.
 func SampleStandardDeviation[T Number](arr []T) float64 {
 	deltaSquareSum := 0.00
 	arrLength := len(arr)
@@ -109,7 +109,7 @@ func SampleStandardDeviation[T Number](arr []T) float64 {
 	return math.Sqrt(deltaSquareSum / float64(arrLength-1))
 }
 
-// PopulationStandardDeviation function returns the standard-deviation value from a population/complete-data of slice of type float.
+// PopulationStandardDeviation function returns the standard-deviation Value from a population/complete-data of slice of type float.
 func PopulationStandardDeviation[T Number](arr []T) float64 {
 	deltaSquareSum := 0.00
 	arrLength := len(arr)
@@ -120,9 +120,9 @@ func PopulationStandardDeviation[T Number](arr []T) float64 {
 	return math.Sqrt(deltaSquareSum / float64(arrLength))
 }
 
-// Min function returns the minimum value from a slice of type T (int or float).
+// Min function returns the minimum Value from a slice of type T (int or float).
 func Min[T Number](arr []T) T {
-	// set initial max value
+	// set initial max Value
 	max := arr[0]
 	// compute min and max values
 	for _, val := range arr {
@@ -133,9 +133,9 @@ func Min[T Number](arr []T) T {
 	return max
 }
 
-// Max function returns the maximum value from a slice of type T (int or float).
+// Max function returns the maximum Value from a slice of type T (int or float).
 func Max[T Number](arr []T) T {
-	// set initial max value
+	// set initial max Value
 	max := arr[0]
 	// compute min and max values
 	for _, val := range arr {
@@ -163,22 +163,96 @@ func MinMax[T Number](arr []T) (min T, max T) {
 	return
 }
 
+// IQRange InterQuartileRange returns the difference between the first and third quartiles (Q1 and Q3),
+// including other quartile-values
+func IQRange[T Number](arr []T) QuartilesType {
+	// sort numbers, ascending order
+	sort.SliceStable(arr, func(i, j int) bool { return arr[i] < arr[j] })
+	// Determine the numbers of elements
+	arrLength := len(arr)
+	// minimum and maximum
+	min := arr[0]
+	max := arr[arrLength-1]
+	// Determine the Q1, Q2, Q3 and Q4 values from arr
+	Q2 := Median(arr)
+	Q1 := 0.00
+	Q3 := 0.00
+	// Determine if the arr is even or odd
+	isEven := false
+	if arrLength%2 == 0 {
+		isEven = true
+	}
+	// IQR = Q3 - Q1
+	IQR := 0.00
+	if isEven {
+		Q1 = Median(arr[:arrLength/2])
+		Q3 = Median(arr[arrLength/2:])
+		IQR = Q3 - Q1
+	} else {
+		halfDataLength := arrLength / 2 // the ceiling value, i.e.  11, 5
+		// compute medians (Q1 and Q3) to be inclusive of Q2(arr-median)
+		Q1 = Median(arr[:halfDataLength+1])
+		Q3 = Median(arr[halfDataLength:])
+		IQR = Q3 - Q1
+	}
+	return QuartilesType{
+		Min:   float64(min),
+		Max:   float64(max), // Q4
+		Range: float64(max - min),
+		Q1:    Q1,
+		Q2:    Q2, // Median
+		Q3:    Q3,
+		Q4:    float64(max),
+		IQR:   IQR,
+	}
+}
+
 // Quartiles returns slice-values that separate the data into four equal parts.
 // Q0, Q1, Q2, Q3 & Q4
-func Quartiles[T Number](arr []T) []T {
-
-	return []T{}
+func Quartiles[T Number](arr []T) QuartilesType {
+	// sort numbers, ascending order
+	sort.SliceStable(arr, func(i, j int) bool { return arr[i] < arr[j] })
+	// Determine the numbers of elements
+	arrLength := len(arr)
+	// minimum and maximum
+	min := arr[0]
+	max := arr[arrLength-1]
+	// Determine the Q1, Q2, Q3 and Q4 values from arr
+	Q2 := Median(arr)
+	Q1 := 0.00
+	Q3 := 0.00
+	// Determine if the arr is even or odd
+	isEven := false
+	if arrLength%2 == 0 {
+		isEven = true
+	}
+	// IQR = Q3 - Q1
+	IQR := 0.00
+	if isEven {
+		Q1 = Median(arr[:arrLength/2])
+		Q3 = Median(arr[arrLength/2:])
+		IQR = Q3 - Q1
+	} else {
+		halfDataLength := arrLength / 2 // the ceiling value, i.e.  11, 5
+		// compute medians (Q1 and Q3) to be inclusive of Q2(arr-median)
+		Q1 = Median(arr[:halfDataLength+1])
+		Q3 = Median(arr[halfDataLength:])
+		IQR = Q3 - Q1
+	}
+	return QuartilesType{
+		Min:   float64(min),
+		Max:   float64(max),
+		Range: float64(max - min),
+		Q1:    Q1,
+		Q2:    Q2,
+		Q3:    Q3,
+		IQR:   IQR,
+	}
 }
 
 // Percentiles returns slice-values that separate the data into 100 equal parts.
 // Examples: 25%[Q1], 50%[Q2], 75%[Q3]
-func Percentiles[T Number](arr []T) []T {
-
-	return []T{}
-}
-
-// IQRange InterQuartileRange returns the difference between the first and third quartiles (Q1 and Q3)
-func IQRange[T Number](arr []T) float64 {
+func Percentiles[T Number](arr []T) float64 {
 	// sort numbers, ascending order
 	sort.SliceStable(arr, func(i, j int) bool { return arr[i] < arr[j] })
 	// Determine the Q1, Q2, Q3 and Q4 values from arr

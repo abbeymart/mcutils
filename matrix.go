@@ -136,7 +136,7 @@ func SubtractMultipleMatrices[T float64 | int64](matrices [][][]T, result [][]T)
 	return nil
 }
 
-// AddScalarMatrix function adds a scalar value to the matrix/matrices.
+// AddScalarMatrix function adds a scalar Value to the matrix/matrices.
 func AddScalarMatrix[T float64 | int64](matrix [][]T, scalar T, result [][]T) error {
 	// initialize the matrix result
 	result = [][]T{}
@@ -166,7 +166,7 @@ func AddScalarMatrix[T float64 | int64](matrix [][]T, scalar T, result [][]T) er
 	return nil
 }
 
-// SubtractScalarMatrix function subtracts a scalar value from the matrix/matrices.
+// SubtractScalarMatrix function subtracts a scalar Value from the matrix/matrices.
 func SubtractScalarMatrix[T float64 | int64](matrix [][]T, scalar T, result [][]T) error {
 	// initialize the matrix result
 	result = [][]T{}
@@ -196,7 +196,7 @@ func SubtractScalarMatrix[T float64 | int64](matrix [][]T, scalar T, result [][]
 	return nil
 }
 
-// MultiplyScalarMatrix function multiply a scalar value with the matrix/matrices.
+// MultiplyScalarMatrix function multiply a scalar Value with the matrix/matrices.
 func MultiplyScalarMatrix[T float64 | int64](matrix [][]T, scalar T, result [][]T) error {
 	// initialize the matrix result
 	result = [][]T{}
@@ -226,7 +226,7 @@ func MultiplyScalarMatrix[T float64 | int64](matrix [][]T, scalar T, result [][]
 	return nil
 }
 
-// DivideScalarMatrix function the matrix/matrices by the scalar value.
+// DivideScalarMatrix function the matrix/matrices by the scalar Value.
 func DivideScalarMatrix[T float64 | int64](matrix [][]T, scalar T, result [][]T) error {
 	// initialize the matrix result
 	result = [][]T{}

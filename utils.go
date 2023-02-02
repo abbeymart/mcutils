@@ -196,7 +196,7 @@ func SeparatorFieldToPascalCase(text string, sep string) (string, error) {
 
 // CaseFieldToUnderscore transforms camelCase or PascalCase name to underscore name, in lowercase
 func CaseFieldToUnderscore(caseString string) string {
-	// Create slice of words from the cased-value, separate at Uppercase-character
+	// Create slice of words from the cased-Value, separate at Uppercase-character
 	re := regexp.MustCompile(`[A-Z][^A-Z]*`)
 	// transform first character to Uppercase
 	caseValue := strings.ToUpper(string(caseString[0])) + caseString[1:]
@@ -256,7 +256,7 @@ func ShortString(str string, maxLength uint) string {
 	return str
 }
 
-// StringToBool returns the boolean value of the specified string-value
+// StringToBool returns the boolean Value of the specified string-Value
 func StringToBool(val string) bool {
 	// convert val to lowercase and trim any trailing whitespaces
 	strVal := strings.ToLower(val)
@@ -283,7 +283,7 @@ func ParseRawValues(rawValues [][]byte) ([]interface{}, error) {
 	// parse the current-raw-values
 	for _, val := range rawValues {
 		if err := json.Unmarshal(val, &value); err != nil {
-			return nil, errors.New(fmt.Sprintf("Error parsing raw-row-value: %v", err.Error()))
+			return nil, errors.New(fmt.Sprintf("Error parsing raw-row-Value: %v", err.Error()))
 		} else {
 			values = append(values, value)
 		}
@@ -354,7 +354,7 @@ func GetHashValue(info interface{}, cryptCode string) (string, error) {
 	return res, nil
 }
 
-// CurrencyNumFormatter format a number value based on the specified currency and precision
+// CurrencyNumFormatter format a number Value based on the specified currency and precision
 func CurrencyNumFormatter(num *big.Float, currency string, precision int) (string, error) {
 	// return '$' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 	//ac := accounting.Accounting{Symbol: "$", Precision: 2}
@@ -370,7 +370,7 @@ func CurrencyNumFormatter(num *big.Float, currency string, precision int) (strin
 	return res, nil
 }
 
-// NumFormatter format a number value based on the specified precision
+// NumFormatter format a number Value based on the specified precision
 func NumFormatter(num *big.Float, precision int) (string, error) {
 	if precision < 0 {
 		precision = 0
@@ -394,7 +394,7 @@ func JsonToStruct(jsonRec []byte, rec interface{}) error {
 //type ActionParamType map[string]interface{}
 //type ActionParamsType []ActionParamType
 
-// StructToMapUnderscoreData transform a struct data type to the map[string]interface{} value type, camelCase fields.
+// StructToMapUnderscoreData transform a struct data type to the map[string]interface{} Value type, camelCase fields.
 // map keys are converted to underscore types to match database-table-field/columns specs
 func StructToMapUnderscoreData(rec interface{}) (map[string]interface{}, error) {
 	// validate recs as struct{} type
@@ -682,8 +682,8 @@ func GetParamsMessage(msgObject MessageObject) mcresponse.ResponseMessage {
 	})
 }
 
-// ConvertJsonStringToMapValue converts the db-json-string-value to the map-type.
-// Returns map value on success, or on error, returns map nil-value and error.
+// ConvertJsonStringToMapValue converts the db-json-string-Value to the map-type.
+// Returns map Value on success, or on error, returns map nil-Value and error.
 func ConvertJsonStringToMapValue(jsonStr string) (map[string]interface{}, error) {
 	mapVal := map[string]interface{}{}
 	jErr := json.Unmarshal([]byte(jsonStr), &mapVal)
@@ -693,8 +693,8 @@ func ConvertJsonStringToMapValue(jsonStr string) (map[string]interface{}, error)
 	return mapVal, nil
 }
 
-// ConvertJsonStringToTypeValue converts the db-json-string-value to the base-type.
-// On success, store the transformed/converted value to the base-type address (typePointer).
+// ConvertJsonStringToTypeValue converts the db-json-string-Value to the base-type.
+// On success, store the transformed/converted Value to the base-type address (typePointer).
 func ConvertJsonStringToTypeValue(jsonStr string, typePointer interface{}) error {
 	jErr := json.Unmarshal([]byte(jsonStr), typePointer)
 	if jErr != nil {
@@ -703,10 +703,10 @@ func ConvertJsonStringToTypeValue(jsonStr string, typePointer interface{}) error
 	return nil
 }
 
-// ConvertJsonBase64StringToTypeValue converts the db-json-string-value to the base-type.
-// On success, store and returns the transformed/converted value to the base-type address (typePointer).
+// ConvertJsonBase64StringToTypeValue converts the db-json-string-Value to the base-type.
+// On success, store and returns the transformed/converted Value to the base-type address (typePointer).
 func ConvertJsonBase64StringToTypeValue(base64Str interface{}, typePointer interface{}) (interface{}, error) {
-	// assert the base64String value as of string-type
+	// assert the base64String Value as of string-type
 	strVal, ok := base64Str.(string)
 	if !ok {
 		return nil, errors.New(fmt.Sprintf("unable to convert base64-string [%v] to string", base64Str))
@@ -716,7 +716,7 @@ func ConvertJsonBase64StringToTypeValue(base64Str interface{}, typePointer inter
 	if err != nil {
 		return nil, err
 	}
-	// transform/un-marshal the decoded value to the base-type
+	// transform/un-marshal the decoded Value to the base-type
 	jErr := json.Unmarshal(decoded, typePointer)
 	if jErr != nil {
 		return nil, jErr
@@ -724,8 +724,8 @@ func ConvertJsonBase64StringToTypeValue(base64Str interface{}, typePointer inter
 	return typePointer, nil
 }
 
-// ConvertJsonBase64StringToMap converts the db-json-string-value to the map-type
-// On success, returns the resulting map-value.
+// ConvertJsonBase64StringToMap converts the db-json-string-Value to the map-type
+// On success, returns the resulting map-Value.
 func ConvertJsonBase64StringToMap(base64Str interface{}) (map[string]interface{}, error) {
 	mapVal := map[string]interface{}{}
 	strVal, ok := base64Str.(string)
@@ -748,12 +748,12 @@ func ConvertByteSliceToBase64Str(fileContent []byte) string {
 	return base64.StdEncoding.EncodeToString(fileContent)
 }
 
-// ConvertStringToBase64Str converts string value to slice of byte.
+// ConvertStringToBase64Str converts string Value to slice of byte.
 func ConvertStringToBase64Str(fileContent string) string {
 	return base64.StdEncoding.EncodeToString([]byte(fileContent))
 }
 
-// ExcludeEmptyIdFromMapRecord excludes id field with zero value("").
+// ExcludeEmptyIdFromMapRecord excludes id field with zero Value("").
 // Return the map record with id fields removed.
 func ExcludeEmptyIdFromMapRecord(rec map[string]interface{}) map[string]interface{} {
 	mapVal := map[string]interface{}{}
@@ -779,7 +779,7 @@ func ExcludeFieldFromMapRecord(rec map[string]interface{}, field string) map[str
 	return mapVal
 }
 
-// ExcludeEmptyIdFields excludes fields with name id or ending with Id/ID/iD, with zero value("").
+// ExcludeEmptyIdFields excludes fields with name id or ending with Id/ID/iD, with zero Value("").
 // Return the map record with id fields removed.
 func ExcludeEmptyIdFields(recs []map[string]interface{}) []map[string]interface{} {
 	var mapValues []map[string]interface{}
