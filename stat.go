@@ -5,9 +5,21 @@
 package mcutils
 
 import (
+	"fmt"
 	"math"
 	"sort"
 )
+
+type FrequencyValue struct {
+	Range string  `json:"range"`
+	Count int     `json:"count"`
+	Value float64 `json:"value"`
+}
+
+type FrequencyResult struct {
+	Result   []FrequencyValue `json:"result"`
+	Interval uint             `json:"interval"`
+}
 
 // Mean function returns the mean or average Value from a slice of type float.
 func Mean[T Number](arr []T) float64 {
@@ -64,19 +76,6 @@ func Mode[T Number](arr []T) []CounterValue[T] {
 				modes = append(modes, cVal)
 			}
 		}
-	}
-	return modes
-}
-
-// Frequency function returns the frequency / occurrence of a slice of type float.
-func Frequency[T Number](arr []T) []CounterValue[T] {
-	// Obtain the counter values for the arr items
-	result := ArrayValue[T](arr)
-	arrCounters := result.Counter()
-	var modes []CounterValue[T]
-	// compute the frequency/occurrence
-	for _, cVal := range arrCounters {
-		modes = append(modes, cVal)
 	}
 	return modes
 }
@@ -205,6 +204,66 @@ func IQRange[T Number](arr []T) QuartilesType {
 		Q4:    float64(max),
 		IQR:   IQR,
 	}
+}
+
+// Interval calculates the width/interval of the sample data size
+func Interval[T Number](arr []T) float64 {
+	// sort numbers, ascending order
+	sort.SliceStable(arr, func(i, j int) bool { return arr[i] < arr[j] })
+	arrLength := len(arr)
+	min := arr[0]
+	max := arr[arrLength-1]
+	rangeValue := max - min
+	intervalVal := float64(rangeValue) / float64(arrLength)
+	return math.Ceil(intervalVal)
+}
+
+// Frequency function returns the frequency / occurrence of a slice of type float.
+func Frequency[T Number](arr []T, interval float64) FrequencyResult {
+	// sort numbers, ascending order
+	sort.SliceStable(arr, func(i, j int) bool { return arr[i] < arr[j] })
+	arrLength := len(arr)
+	min := float64(arr[0])
+	max := float64(arr[arrLength-1])
+	// TODO: compose range and counts/frequency/occurrence
+	if interval < 1 {
+		interval = 1
+	}
+	if interval == 1 {
+		// Obtain the counter values for the arr items
+		result := ArrayValue[T](arr)
+		arrCounters := result.Counter()
+		var freqValue []FrequencyValue
+		// compute the frequency/occurrence
+		for _, cVal := range arrCounters {
+			freqValue = append(freqValue, FrequencyValue{
+				Value: float64(cVal.Value),
+				Count: cVal.Count,
+			})
+		}
+	} else {
+		var freqValue []FrequencyValue
+		start := min
+		for start <= max {
+			end := start + interval
+			rangeValue := fmt.Sprintf("%v - %v", start, end)
+			// compute counts of arr values that fall within the rangeValue(start-end)
+			count := 0
+			for _, arrVal := range arr {
+				if float64(arrVal) >= start || float64(arrVal) < end {
+					count += 1
+				}
+			}
+			freqValue = append(freqValue, FrequencyValue{
+				Range: rangeValue,
+				Count: count,
+			})
+			// next range start
+			start += interval
+		}
+	}
+
+	return FrequencyResult{}
 }
 
 // Quartiles returns slice-values that separate the data into four equal parts.

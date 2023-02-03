@@ -26,13 +26,15 @@ import (
 // counters
 
 type CounterValue[T ValueType] struct {
-	Count int
-	Value T
+	Count int `json:"count"`
+	Value T   `json:"value"`
 }
+
 type CounterObjectValue[T map[string]interface{} | struct{}] struct {
 	Count int
 	Value T
 }
+
 type ArrayValue[T ValueType] []T
 
 //type ArrayValue[T ValueType] struct {
