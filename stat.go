@@ -313,49 +313,6 @@ func IQRange[T Number](arr []T) QuartilesType {
 	}
 }
 
-// Quartiles returns slice-values that separate the data into four equal parts (quantiles).
-// Q0/min, Q1/25%, Q2/50%(median), Q3/75% & Q4/max
-func Quartiles[T Number](arr []T) QuartilesType {
-	// sort numbers, ascending order
-	sort.SliceStable(arr, func(i, j int) bool { return arr[i] < arr[j] })
-	// Determine the numbers of elements
-	arrLength := len(arr)
-	// minimum and maximum
-	min := arr[0]
-	max := arr[arrLength-1]
-	// Determine the Q1, Q2, Q3 and Q4 values from arr
-	Q2 := Median(arr)
-	Q1 := 0.00
-	Q3 := 0.00
-	// Determine if the arr is even or odd
-	isEven := false
-	if arrLength%2 == 0 {
-		isEven = true
-	}
-	// IQR = Q3 - Q1
-	IQR := 0.00
-	if isEven {
-		Q1 = Median(arr[:arrLength/2])
-		Q3 = Median(arr[arrLength/2:])
-		IQR = Q3 - Q1
-	} else {
-		halfDataLength := arrLength / 2 // the ceiling value, i.e.  11, 5
-		// compute medians (Q1 and Q3) to be inclusive of Q2(arr-median)
-		Q1 = Median(arr[:halfDataLength+1])
-		Q3 = Median(arr[halfDataLength:])
-		IQR = Q3 - Q1
-	}
-	return QuartilesType{
-		Min:   float64(min),
-		Max:   float64(max),
-		Range: float64(max - min),
-		Q1:    Q1,
-		Q2:    Q2,
-		Q3:    Q3,
-		IQR:   IQR,
-	}
-}
-
 // Deciles returns slice-values that separate the data into 10 equal parts (quantiles). TODO: review/complete.
 // Examples: 10%, 20%[Q2], 30%[Q3]... 100%
 func Deciles[T Number](arr []T) QuartilesType {
