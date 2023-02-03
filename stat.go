@@ -11,14 +11,28 @@ import (
 )
 
 type FrequencyValue struct {
-	Range string  `json:"range"`
-	Count int     `json:"count"`
-	Value float64 `json:"value"`
+	Label     string  `json:"label"`
+	Frequency int     `json:"frequency"`
+	Value     float64 `json:"value"`
 }
 
 type FrequencyResult struct {
 	Result   []FrequencyValue `json:"result"`
 	Interval uint             `json:"interval"`
+}
+
+type StatFrequencyValue struct {
+	Label                       string  `json:"label"`
+	Value                       float64 `json:"value"`
+	Frequency                   int     `json:"frequency"`
+	RelativeFrequency           float64 `json:"relativeFrequency"`
+	CumulativeFrequency         int     `json:"cumulativeFrequency"`
+	CumulativeRelativeFrequency float64 `json:"cumulativeRelativeFrequency"`
+}
+
+type StatFrequencyResult struct {
+	Result   []StatFrequencyValue `json:"result"`
+	Interval uint                 `json:"interval"`
 }
 
 // Mean function returns the mean or average Value from a slice of type float.
@@ -219,13 +233,16 @@ func Interval[T Number](arr []T) float64 {
 }
 
 // Frequency function returns the frequency / occurrence of a slice of type float.
-func Frequency[T Number](arr []T, interval float64) FrequencyResult {
+func Frequency[T Number](arr []T, interval float64, valueLabel string) FrequencyResult {
 	// sort numbers, ascending order
 	sort.SliceStable(arr, func(i, j int) bool { return arr[i] < arr[j] })
 	arrLength := len(arr)
 	min := float64(arr[0])
 	max := float64(arr[arrLength-1])
 	// TODO: compose range and counts/frequency/occurrence
+	if valueLabel == "" {
+		valueLabel = "value"
+	}
 	if interval < 1 {
 		interval = 1
 	}
@@ -237,8 +254,8 @@ func Frequency[T Number](arr []T, interval float64) FrequencyResult {
 		// compute the frequency/occurrence
 		for _, cVal := range arrCounters {
 			freqValue = append(freqValue, FrequencyValue{
-				Value: float64(cVal.Value),
-				Count: cVal.Count,
+				Value:     float64(cVal.Value),
+				Frequency: cVal.Count,
 			})
 		}
 	} else {
@@ -246,7 +263,7 @@ func Frequency[T Number](arr []T, interval float64) FrequencyResult {
 		start := min
 		for start <= max {
 			end := start + interval
-			rangeValue := fmt.Sprintf("%v - %v", start, end)
+			rangeValue := fmt.Sprintf("%v<=%v<%v", start, valueLabel, end)
 			// compute counts of arr values that fall within the rangeValue(start-end)
 			count := 0
 			for _, arrVal := range arr {
@@ -255,15 +272,47 @@ func Frequency[T Number](arr []T, interval float64) FrequencyResult {
 				}
 			}
 			freqValue = append(freqValue, FrequencyValue{
-				Range: rangeValue,
-				Count: count,
+				Label:     rangeValue,
+				Frequency: count,
 			})
 			// next range start
 			start += interval
 		}
 	}
-
 	return FrequencyResult{}
+}
+
+// StatFrequency function returns the frequency / relative / cumulative / relative-cumulative frequencies of a slice of type float.
+func StatFrequency[T Number](arr []T, interval float64, valueLabel string) StatFrequencyResult {
+	// Compute frequency values
+	freqRes := Frequency(arr, interval, valueLabel)
+	freqResult := freqRes.Result
+	//freqResultLength := len(freqResult)
+	var result []StatFrequencyValue
+	// TODO: compute relative / cumulative / relative-cumulative frequencies
+	// frequency/occurrence summation
+	freqSum := 0
+	for _, fVal := range freqResult {
+		freqSum += fVal.Frequency
+	}
+	cumFreq := 0
+	for _, val := range freqResult {
+		cumFreq += val.Frequency
+		result = append(result, StatFrequencyValue{
+			Label:                       val.Label,
+			Value:                       val.Value,
+			Frequency:                   val.Frequency,
+			RelativeFrequency:           float64(val.Frequency) / float64(freqSum),
+			CumulativeFrequency:         cumFreq,
+			CumulativeRelativeFrequency: float64(cumFreq) / float64(freqSum),
+		})
+
+	}
+
+	return StatFrequencyResult{
+		Result:   result,
+		Interval: freqRes.Interval,
+	}
 }
 
 // Quartiles returns slice-values that separate the data into four equal parts.
