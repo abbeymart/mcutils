@@ -18,7 +18,7 @@ type FrequencyValue struct {
 
 type FrequencyResult struct {
 	Result   []FrequencyValue `json:"result"`
-	Interval uint             `json:"interval"`
+	Interval float64          `json:"interval"`
 }
 
 type StatFrequencyValue struct {
@@ -32,7 +32,7 @@ type StatFrequencyValue struct {
 
 type StatFrequencyResult struct {
 	Result   []StatFrequencyValue `json:"result"`
-	Interval uint                 `json:"interval"`
+	Interval float64              `json:"interval"`
 }
 
 // Mean function returns the mean or average Value from a slice of type float.
@@ -202,11 +202,11 @@ func Frequency[T Number](arr []T, interval float64, valueLabel string) Frequency
 	if interval < 1 {
 		interval = 1
 	}
+	var freqValue []FrequencyValue
 	if interval == 1 {
 		// Obtain the counter values for the arr items
 		result := ArrayValue[T](arr)
 		arrCounters := result.Counter()
-		var freqValue []FrequencyValue
 		// compute the frequency/occurrence
 		for _, cVal := range arrCounters {
 			freqValue = append(freqValue, FrequencyValue{
@@ -215,7 +215,6 @@ func Frequency[T Number](arr []T, interval float64, valueLabel string) Frequency
 			})
 		}
 	} else {
-		var freqValue []FrequencyValue
 		start := min
 		for start <= max {
 			end := start + interval
@@ -235,7 +234,10 @@ func Frequency[T Number](arr []T, interval float64, valueLabel string) Frequency
 			start += interval
 		}
 	}
-	return FrequencyResult{}
+	return FrequencyResult{
+		Result:   freqValue,
+		Interval: interval,
+	}
 }
 
 // StatFrequency function returns the frequency / relative / cumulative / relative-cumulative frequencies of a slice of type float.
