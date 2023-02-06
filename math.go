@@ -57,10 +57,10 @@ func FactNumGen(num uint, factChannel chan<- int) {
 	}
 }
 
-// FactorialGen function returns the factorial Value of 1 to num, using number-generator via channel.
-func FactorialGen(num uint) int {
+// Factorial function returns the factorial Value of 1 to num, using number-generator via channel.
+func Factorial(num uint) int {
 	// using the generator function, via channel, no recursion
-	var result int = 1
+	result := 1
 	factChannel := make(chan int, num)
 	go FactNumGen(num, factChannel)
 	for v := range factChannel {
@@ -72,7 +72,7 @@ func FactorialGen(num uint) int {
 // FactorialGen2 function returns the factorial Value of 1 to num, using simple iteration method.
 func FactorialGen2(num uint) int {
 	// using number-series, no recursion
-	var result = 1
+	result := 1
 	var v int
 	for v = 1; v <= int(num); v++ {
 		result *= v
@@ -81,14 +81,15 @@ func FactorialGen2(num uint) int {
 }
 
 // FiboTail function returns last fibonacci numbers up to the limit (num).
-// current and next parameters should be set to 1 (default) - TODO: review/clarify/test.
+// current and next parameters should be set to 0/1? (default) - TODO: review/clarify/test.
 func FiboTail(num int, current int, next int) int {
-	if current != 1 {
-		current = 1
+	if current != 0 {
+		current = 0
 	}
 	if num == 0 {
 		return current
 	}
+
 	// using the tail call optimization
 	return FiboTail(num-1, current, current+next)
 }
