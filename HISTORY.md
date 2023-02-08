@@ -4,7 +4,7 @@
 
 ## Version 0.2.0
 - Release date: TBD
-- Refactor methods
+- Refactor methods and test-v0.2.0
 
 ## Version 0.1.9
 - Release date: June 12, 2022

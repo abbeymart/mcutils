@@ -7,7 +7,6 @@ import (
 )
 
 func TestCollection(t *testing.T) {
-	// test-data
 	const msgType = "success"
 	const msgType2 = "checkError"
 	options := mcresponse.ResponseMessageOptions{
@@ -22,7 +21,6 @@ func TestCollection(t *testing.T) {
 		Value:      "",
 		Message:    "Request completed successfully",
 	}
-	//const unAuthMsg = "unAuthorized"
 
 	mctest.McTest(mctest.OptionValue{
 		Name: "should return success code for success-message",
