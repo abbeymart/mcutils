@@ -41,16 +41,16 @@ var pythagorasResult100 = [][]int{
 
 
  var numParams = []int{2, 5, 3, 5, 3, 5, 2, 3, 5,}
- const stringParams: ArrayOfString = ["a", "b", "a", "a", "a", "a"]
- const booleanParams: Array<boolean> = [true, false, true, true, true, false, true, true]
- const symbolParams: ArrayOfSymbol = [Symbol("abc"), Symbol("bcd"), Symbol("abc"), Symbol("bcd"), Symbol("abc")]
- const countNumResult: CounterType = {2: 2, 3: 3, 5: 4,}
- const countNumResultKeys = Object.keys(countNumResult)
- const countStringResult: CounterType = {"a": 5, "b": 1,}
- const countStringResultKeys = Object.keys(countStringResult)
+ var stringParams = []string{"a", "b", "a", "a", "a", "a"}
+ var booleanParams = []bool{true, false, true, true, true, false, true, true}
+ //var symbolParams = [Symbol("abc"), Symbol("bcd"), Symbol("abc"), Symbol("bcd"), Symbol("abc")]
+ var countNumResult: CounterType = {2: 2, 3: 3, 5: 4,}
+ var countNumResultKeys = Object.keys(countNumResult)
+ var countStringResult: CounterType = {"a": 5, "b": 1,}
+ var countStringResultKeys = Object.keys(countStringResult)
 
- const setNumResult = [2, 5, 3]
- const setStingResult = ["a", "b"]
- const setBooleanResult = [true, false]
- const setSymbolResult = [Symbol("abc"), Symbol("bcd"), Symbol("abc"), Symbol("bcd"), Symbol("abc")]
+ var setNumResult = []int{2, 5, 3}
+ var setStingResult = ["a", "b"]
+ var setBooleanResult = [true, false]
+ var setSymbolResult = [Symbol("abc"), Symbol("bcd"), Symbol("abc"), Symbol("bcd"), Symbol("abc")]
 
