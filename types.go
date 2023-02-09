@@ -6,11 +6,19 @@ package mcutils
 
 type LocaleContent map[string]interface{}
 
-//type Locale map[string]LocaleContent
+type Locale map[string]LocaleContent
+
+type LocaleFilesType map[string]Locale // key => language ("en-US", "en-CA", "yoruba", "fr-CA", "fr-FR" etc.
 
 type LocaleOptions struct {
 	LocaleType string
 	Language   string
+}
+
+type LocaleFunc func(val interface{}) interface{}
+
+type LocaleValueType interface {
+	ValueType | LocaleFunc
 }
 
 type MessageObject map[string]string
@@ -33,17 +41,7 @@ type Number interface {
 
 type TestFuncType[T ValueType] func(val T) bool
 
-type LocaleFunc[T ValueType] func() T
-
-type LocaleValueType[T ValueType] interface {
-	ValueType | LocaleFunc[T]
-}
-
 type ObjectType map[string]interface{}
-
-type Locale[T ValueType] map[string]LocaleValueType[T]
-
-type LocaleFilesType[T ValueType] map[string]Locale[T] // key => language ("en-US", "en-CA", "yoruba", "fr-CA", "fr-FR" etc.
 
 // types
 
