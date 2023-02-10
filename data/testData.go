@@ -101,11 +101,23 @@ var ArrayOfNumber2 = []float64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1.5, 2.5, 3.5, 4.5
 
 const StdDeviationResultEst2 = 2.74
 
+// geometric mean
+
+const GeoMeanPrecision2Result = 4.53    // precision 5
+const GeoMeanPrecision5Result = 4.52872 // precision 5
+
 // variance
+
+const VariancePrecision2Result = 9.17    // precision of 2
+const VariancePrecision5Result = 9.16667 // precision of 2
 
 // interval
 
+const Interval = 1
+
 // frequency
+
+var ArrayOfNumberFreq = []int{1, 2, 2, 2, 1, 4, 4, 3, 5, 10}
 
 // frequencyStat
 
