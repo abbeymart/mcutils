@@ -235,7 +235,7 @@ func GetLanguage(userLang string) string {
 }
 
 // GetLocale function returns the locale for the specified language
-func GetLocale(localeFiles Locale, options LocaleOptions) LocaleContent {
+func GetLocale(localeFiles LocaleFilesType, options LocaleOptions) Locale {
 	// localeType := options.LocaleType
 	var language string
 	if lang := options.Language; lang != "" {

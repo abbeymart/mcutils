@@ -6,7 +6,7 @@ package mcutils
 
 type LocaleContent map[string]interface{}
 
-type Locale map[string]LocaleContent
+type Locale map[string]interface{}
 
 type LocaleFilesType map[string]Locale // key => language ("en-US", "en-CA", "yoruba", "fr-CA", "fr-FR" etc.
 

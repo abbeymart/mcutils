@@ -1,35 +1,35 @@
 package data
 
-var emptyObjectValue = map[string]interface{}{}
-var nonEmptyObjectValue = map[string]interface{}{"name": "Abi", "location": "Toronto"}
+var EmptyObjectValue = map[string]interface{}{}
+var NonEmptyObjectValue = map[string]interface{}{"name": "Abi", "location": "Toronto"}
 
-const shortStringParam = "This is a great title for testing"
-const short21StringResult = "This is a great title..."
-const short20StringResult = "This is a great titl..."
+const ShortStringParam = "This is a great title for testing"
+const Short21StringResult = "This is a great title..."
+const Short20StringResult = "This is a great titl..."
 
-var paramObjectMsgData = map[string]string{"name": "required", "location": "optional"}
+var ParamObjectMsgData = map[string]string{"name": "required", "location": "optional"}
 
-const paramObjectMsgResult = `name: required | location: optional`
+const ParamObjectMsgResult = `name: required | location: optional`
 
-// const strTrueToBool = "true"
-// const strYesToBool = "yes"
-// const strYToBool = "Y"
-// const strFalseToBool = "false"
-// const strNoToBool = "no"
-// const strNToBool = "N"
-// const str1ToBool = 1
-// const str0ToBool = 0
-// const strEmptyToBool = ""
+const StrTrueToBool = "true"
+const StrYesToBool = "yes"
+const StrYToBool = "Y"
+const StrFalseToBool = "false"
+const StrNoToBool = "no"
+const StrNToBool = "N"
+const Str1ToBool = 1
+const Str0ToBool = 0
+const StrEmptyToBool = ""
 
-const firstname = "Abi"
-const middlename = "John"
-const lastname = "Owo"
-const fullnameTwo = "Abi Owo"
-const fullnameThree = "Abi John Owo"
+const Firstname = "Abi"
+const Middlename = "John"
+const Lastname = "Owo"
+const FullnameTwo = "Abi Owo"
+const FullnameThree = "Abi John Owo"
 
-const camelCaseValue = "countryCode"
-const underscoreValue = "country_code"
-const pascalCaseValue = "CountryCode"
-const dotSepParam = "country.code"
-const pipeSepParam = "country|code"
-const spaceSepParam = "country code"
+const CamelCaseValue = "countryCode"
+const UnderscoreValue = "country_code"
+const PascalCaseValue = "CountryCode"
+const DotSepParam = "country.code"
+const PipeSepParam = "country|code"
+const SpaceSepParam = "country code"

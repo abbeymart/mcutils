@@ -1,84 +1,112 @@
 package data
 
-
+import (
+	"github.com/abbeymart/mcutils"
+	"math"
+	"strings"
+)
 
 // collection
-const arrayOfNumber: ArrayOfNumber = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,]
-const arrayOfString: ArrayOfString = ["abc", "ab2", "abc3", "ab4", "abc5", "ab6", "abc7", "ab8", "abc9",
-"ab10",]
+
+var ArrayOfNumber = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+var ArrayOfString = []string{"abc", "ab2", "abc3", "ab4", "abc5", "ab6", "abc7", "ab8", "abc9", "ab10"}
+
 // const arrayOfSymbol: ArrayOfSymbol = [Symbol("abc"), Symbol("ab2"), Symbol("ab3"), Symbol("ab4"), Symbol("ab5"),
 //     Symbol("ab6"), Symbol("ab7"), Symbol("ab8"), Symbol("ab9"), Symbol("ab10"),]
 
-const filterEvenNumFunc = (val: number): boolean => val % 2 === 0
-const filterEvenNumFuncResult = [2, 4, 6, 8, 10,]
-const filterOddNumFunc = (val: number): boolean => val % 2 !== 0
-const filterOddNumFuncResult = [1, 3, 5, 7, 9,]
-const filterStringIncludeABC = (val: string): boolean => val.includes("abc")
-const filterStringIncludeABCResult = ["abc", "abc3", "abc5", "abc7", "abc9",]
+func FilterEvenNumFunc[T mcutils.Number](val T) bool {
+	return math.Abs(math.Remainder(float64(val), 2)) == 0.00
+}
 
-const mapDoubleNumFunc = (val: number) => val * 2
-const mapDoubleNumFuncResult = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20,]
+var FilterEvenNumFuncResult = []int{2, 4, 6, 8, 10}
 
-const take7NumResult = [1, 2, 3, 4, 5, 6, 7]
+func FilterOddNumFunc[T mcutils.Number](val T) bool {
+	return math.Abs(math.Remainder(float64(val), 2)) != 0.00
+}
+
+var FilterOddNumFuncResult = []int{1, 3, 5, 7, 9}
+
+func FilterStringIncludeABC(val string) bool {
+	return strings.Contains(val, "abc")
+}
+
+var FilterStringIncludeABCResult = []string{"abc", "abc3", "abc5", "abc7", "abc9"}
+
+func MapDoubleNumFunc[T mcutils.Number](val T) T {
+	return val * 2
+}
+
+var MapDoubleNumFuncResult = []int{2, 4, 6, 8, 10, 12, 14, 16, 18, 20}
+
+var Take7NumResult = []int{1, 2, 3, 4, 5, 6, 7}
+
 const take7CountResult = 7
-const take7StringResult = ["abc", "ab2", "abc3", "ab4", "abc5", "ab6", "abc7",]
+
+var Take7StringResult = []string{"abc", "ab2", "abc3", "ab4", "abc5", "ab6", "abc7"}
 
 // getLocale
-const localeLabelOptions = LocaleOptions{
-type    : "mcLabels",
-language: "en-CA",
-}
-const localeConstantOptions: LocaleOptions = {
-type    : "mcConstants",
-language: "en-CA",
-}
-var localeLabelObject = Locale{
-code      : "Code",
-name      : "Name",
-desc      : "Description",
-postalCode: "Postal Code",
+
+var LocaleLabelOptions = mcutils.LocaleOptions{
+	LocaleType: "mcLabels",
+	Language:   "en-CA",
 }
 
-const localeConstantObject: Locale = {
-SHORT_DESC  : 20,
-DEFAULT_LANG: "en-US",
+var LocaleConstantOptions = mcutils.LocaleOptions{
+	LocaleType: "mcConstants",
+	Language:   "en-CA",
 }
 
-const localeLabelFiles = Locale{
-"en-US": localeLabelObject,
-"en-CA": localeLabelObject,
+// code      : "Code",
+//name      : "Name",
+//desc      : "Description",
+//postalCode: "Postal Code",
+
+var LabelObject = mcutils.Locale{
+	"code":       "Code",
+	"name":       "Name",
+	"desc":       "Description",
+	"postalCode": "Postal Code",
 }
 
-const localeConstantFiles = LocalFilesType {
-"en-US": localeConstantObject,
-"en-CA": localeConstantObject,
+var ConstantObject = mcutils.Locale{
+	"SHORT_DESC":   20,
+	"DEFAULT_LANG": "en-US",
+}
+
+var LocaleLabelFiles = mcutils.LocaleFilesType{
+	"en-US": LabelObject,
+	"en-CA": LabelObject,
+}
+
+var LocaleConstantFiles = mcutils.LocaleFilesType{
+	"en-US": ConstantObject,
+	"en-CA": ConstantObject,
 }
 
 // stats
 
-const meanResult = 5.5
-const medianResult = 5.5
-const minResult = 1
-const maxResult = 10
-var minMaxResult = []float64{1, 10}
+const MeanResult = 5.5
+const MedianResult = 5.5
+const MinResult = 1
+const MaxResult = 10
 
-const stdDeviationResult = 3.0276503540974917   // 16 decimal places
-const stdDeviationResultEst = 3.02765
+var MinMaxResult = []float64{1, 10}
+
+const StdDeviationResult = 3.0276503540974917 // 16 decimal places
+const StdDeviationResultEst = 3.02765
 
 // populationStandardDeviation
-var arrayOfNumber2 = []float64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5}
-const stdDeviationResultEst2 = 2.74
+
+var ArrayOfNumber2 = []float64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5}
+
+const StdDeviationResultEst2 = 2.74
 
 // variance
 
-
 // interval
-
 
 // frequency
 
-
 // frequencyStat
-
 
 // IQRange
