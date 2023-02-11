@@ -2,9 +2,13 @@
 
 - TODO: refactor, add test cases & test | update stat & go-helper functions
 
-## Version 0.2.0
+## Version 0.2.1
 - Release date: TBD
-- Refactor methods and test-v0.2.0
+- Refactor-methods-and-test-v0.2.1
+
+## Version 0.2.0
+- Release date: Feb 10, 2023
+- Added-stat-matrix-methods-v0.2.0
 
 ## Version 0.1.9
 - Release date: June 12, 2022
