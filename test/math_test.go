@@ -1,4 +1,4 @@
-package mcutils
+package test
 
 import (
 	"github.com/abbeymart/mcresponse"
@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestUtils(t *testing.T) {
+func TestMath(t *testing.T) {
 	// test-data
 	const msgType = "success"
 	const msgType2 = "checkError"

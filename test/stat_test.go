@@ -2,7 +2,7 @@
 // @Company: mConnect.biz | @License: MIT
 // @Description: go: mConnect
 
-package mcutils
+package test
 
 import (
 	"github.com/abbeymart/mcresponse"

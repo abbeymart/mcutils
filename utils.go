@@ -5,6 +5,7 @@
 package mcutils
 
 import (
+	cryptoRand "crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
@@ -823,4 +824,16 @@ func RandomNumbers(n int) string {
 		vString = append(vString, fmt.Sprintf("%v", item))
 	}
 	return fmt.Sprintf("%v", strings.Join(vString, ""))
+}
+
+// CryptoRandomNumbers generates cryptographic random numbers using cryptoRand.Prime and return string of digits.
+func CryptoRandomNumbers(bits int) (string, error) {
+	if bits < 2 {
+		bits = 2
+	}
+	p, err := cryptoRand.Prime(cryptoRand.Reader, bits)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%v", p), nil
 }
