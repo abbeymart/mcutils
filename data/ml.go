@@ -1,10 +1,10 @@
 package data
 
-var ExampleRandomCentroids = [][]int{
+var TestDataRandomCentroids = [][]int{
 	{1, 3}, {5, 8}, {3, 0},
 }
 
-var Example2d3k = [][]int{
+var TestData2d3k = [][]int{
 	{1, 2}, {2, 3}, {2, 5}, {1, 6}, {4, 6},
 	{3, 5}, {2, 4}, {4, 3}, {5, 2}, {6, 9},
 	{4, 4}, {3, 3}, {8, 6}, {7, 5}, {9, 6},
@@ -13,7 +13,7 @@ var Example2d3k = [][]int{
 	{15, 1}, {15, 4}, {14, 2}, {13, 1}, {16, 4},
 }
 
-var Example3d3k = [][]int{
+var TestData3d3k = [][]int{
 	{1, 1, 1},
 	{1, 2, 1},
 	{2, 1, 2},
@@ -31,7 +31,7 @@ var Example3d3k = [][]int{
 	{10, 3, 3},
 }
 
-var Example2dnk = [][]int{
+var TestData2dnk = [][]int{
 	{1, 2}, {1, 1}, {2, 3}, {2, 4}, {3, 3},
 	{4, 4}, {2, 12}, {2, 14}, {3, 14}, {4, 13},
 	{4, 15}, {3, 17}, {8, 4}, {7, 6}, {7, 5},
