@@ -1,6 +1,6 @@
 module github.com/abbeymart/mcutils
 
-go 1.19
+go 1.20
 
 require (
 	github.com/abbeymart/mcresponse v0.9.1
