@@ -17,8 +17,8 @@ func KMeansAutoSolver(kMin float64, kMax float64, maxTrials int, data [][]float6
 	if kMax < 5.00 {
 		kMax = 5.00
 	}
-	if maxTrials < 5.00 {
-		maxTrials = 5.00
+	if maxTrials < 5 {
+		maxTrials = 5
 	}
 	kmAuto := KMeansAutoSolverType{}
 	kmAuto.KMin = kMin

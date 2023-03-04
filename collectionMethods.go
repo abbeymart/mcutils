@@ -1,9 +1,14 @@
 package mcutils
 
+import (
+	"fmt"
+	"strings"
+)
+
 // Index method returns the index of the specified Value (for string, it's case-insensitive)
 func (arr *GenericSliceType[T]) Index(queryVal T) int {
 	for i, value := range arr.Value {
-		if value == queryVal {
+		if value == queryVal || strings.ToLower(fmt.Sprintf("%v", value)) == strings.ToLower(fmt.Sprintf("%v", queryVal)) {
 			return i
 		}
 	}
@@ -24,7 +29,7 @@ func (arr *GenericSliceType[T]) IndexCaseSensitive(val T) int {
 // ArrayContains method check if a slice of generic type T contains/includes a Value of type T  (for string, it's case-insensitive)
 func (arr *GenericSliceType[T]) ArrayContains(queryVal T) bool {
 	for _, a := range arr.Value {
-		if a == queryVal {
+		if a == queryVal || strings.ToLower(fmt.Sprintf("%v", a)) == strings.ToLower(fmt.Sprintf("%v", queryVal)) {
 			return true
 		}
 	}
@@ -44,7 +49,7 @@ func (arr *GenericSliceType[T]) ArrayContainsCaseSensitive(str T) bool {
 // ArrayStringContains method check if a slice of string contains/includes a string Value, case-insensitive
 func (arr *StringSliceType) ArrayStringContains(queryVal string) bool {
 	for _, a := range arr.Value {
-		if a == queryVal {
+		if strings.ToLower(a) == strings.ToLower(queryVal) {
 			return true
 		}
 	}
