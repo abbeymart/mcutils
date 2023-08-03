@@ -34,9 +34,9 @@ func NaturalNumbers(num uint, cntChannel chan<- uint) {
 }
 
 // FactorialTail function returns the factorial Value from 1 to the specified limit (num).
-// Accumulator Value should be set to 1 (default)
+// Accumulator Value should be set to initial value of 1
 func FactorialTail(num uint, acc uint) uint {
-	if acc != 1 {
+	if acc < 1 {
 		acc = 1
 	}
 	if num <= 1 {
@@ -83,15 +83,18 @@ func FactorialGen2(num uint) int {
 // FiboTail function returns last fibonacci numbers up to the limit (num).
 // current and next parameters should be set to 0/1? (default) - TODO: review/clarify/test.
 func FiboTail(num int, current int, next int) int {
-	if current != 0 {
-		current = 0
+	if current < 1 {
+		current = 1
+	}
+	if next < 1 {
+		next = 1
 	}
 	if num == 0 {
-		return current
+		return next
 	}
 
 	// using the tail call optimization
-	return FiboTail(num-1, current, current+next)
+	return FiboTail(num-1, next, current+next)
 }
 
 // FiboArray function returns the slice of pairs of fibonacci numbers.

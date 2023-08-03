@@ -108,7 +108,8 @@ func (km *KMeansType) initRandomCentroids() [][]float64 {
 	for i := 0; i < km.K; i++ {
 		// for each dimension with its own range, create a placeholder
 		var point []float64
-		rand.Seed(time.Now().UnixNano())
+		rand.NewSource(time.Now().UnixNano())
+		//rand.Seed(time.Now().UnixNano())
 		// For each dimension in the data find the min/max range of that dimension,
 		// and choose a random value that lies within that range.
 		for dimension := 0; dimension < dimensionality; dimension++ {
