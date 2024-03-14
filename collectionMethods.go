@@ -86,6 +86,15 @@ func (arr *FloatSliceType) ArrayFloatContains(queryVal float64) bool {
 	return false
 }
 
+func (arr *FloatSlice) ArrayFloatContains(queryVal float64) bool {
+	for _, a := range *arr {
+		if a == queryVal {
+			return true
+		}
+	}
+	return false
+}
+
 // Any method determines if one or more of the slice-values satisfies the testFunc.
 func (arr *GenericSliceType[T]) Any(testFunc TestFuncType[T]) bool {
 	for _, value := range arr.Value {

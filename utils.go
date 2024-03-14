@@ -227,7 +227,7 @@ func IsLeapYear(year int) bool {
 // GetLanguage returns the specified user-language or defaultLanguage as default
 func GetLanguage(userLang string) string {
 	// Define/set default language variable
-	var defaultLang = DefaultLanguage
+	defaultLang := DefaultLanguage
 	// Set defaultLang to current userLang, set from the UI
 	if userLang != "" {
 		defaultLang = userLang
@@ -238,7 +238,7 @@ func GetLanguage(userLang string) string {
 // GetLocale function returns the locale for the specified language
 func GetLocale(localeFiles LocaleFilesType, options LocaleOptions) Locale {
 	// localeType := options.LocaleType
-	var language string
+	language := ""
 	if lang := options.Language; lang != "" {
 		language = lang
 	} else {

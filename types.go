@@ -87,6 +87,9 @@ type FloatSliceType struct {
 	Value []float64 `json:"value"`
 }
 
+type FloatSlice []float64
+type GenericSlice[T ValueType] []T
+
 //type FloatSliceType []float64
 
 type BoolSliceType struct {
