@@ -264,3 +264,12 @@ func ReverseArrayFloatGen(arr []float64, arrChan chan<- float64) {
 		close(arrChan)
 	}
 }
+
+func sumOfArray[T Number](values []T, accumulator T) T {
+	if len(values) == 0 {
+		return accumulator
+	}
+	head := []T{values[0]}
+	tail := values[1:]
+	return sumOfArray(tail, head[0]+accumulator)
+}
