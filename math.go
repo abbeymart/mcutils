@@ -206,3 +206,19 @@ func NaturalNumbersGenInf(naturalChan chan<- uint, stopFunc func() bool) {
 		close(naturalChan)
 	}
 }
+
+func SumOfArray[T Number](arr []T) T {
+	var sum T = 0
+	for _, v := range arr {
+		sum += v
+	}
+	return sum
+}
+
+func MultiplicationOfArray[T Number](arr []T) T {
+	var multiplication T = 1
+	for _, v := range arr {
+		multiplication *= v
+	}
+	return multiplication
+}
