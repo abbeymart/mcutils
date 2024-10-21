@@ -220,8 +220,9 @@ func CaseFieldToUnderscore(caseString string) string {
 
 // IsLeapYear determines if a given year is a leap year
 func IsLeapYear(year int) bool {
-	// by setting the day to the 29th and checking if the day remains
-	return year%400 == 0 || (year%4 == 0 && year%100 != 0) || time.Date(year, time.February, 29, 23, 0, 0, 0, time.UTC).Day() == 29
+	// All years that are divisible by 4 are leap years, unless they start a new century,
+	// provided they are not divisible by 400. OR check if February ends on the 29th
+	return year%4 == 0 && (year%100 != 0 || year%400 == 0) || time.Date(year, time.February, 29, 23, 0, 0, 0, time.UTC).Day() == 29
 }
 
 // GetLanguage returns the specified user-language or defaultLanguage as default
