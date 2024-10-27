@@ -332,7 +332,7 @@ func MultiplyMatrix[T float64 | int64](matrix1 []T, matrix2 [][]T, result []T) e
 }
 
 // MultiplyMatrices function multiply two matrices.
-// The number of rows in matrix1 sub-matrices must be the same as the number of columns in matrix2.
+// The length of each of the matrix1 sub-matrix/rows must match the length of matrix2 (columns).
 func MultiplyMatrices[T float64 | int64](matrix1 [][]T, matrix2 [][]T, result [][]T) error {
 	// initialize the matrix result
 	result = [][]T{}
