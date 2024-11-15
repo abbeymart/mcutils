@@ -265,11 +265,31 @@ func ReverseArrayFloatGen(arr []float64, arrChan chan<- float64) {
 	}
 }
 
-func sumOfArray[T Number](values []T, accumulator T) T {
+// TODO: review generic type-infer error
+//func sumOfArrayGeneric[T Number](values []T, accumulator T) T {
+//	if len(values) == 0 {
+//		return accumulator
+//	}
+//	head := values[0]
+//	var tail []T
+//	if len(values) > 1 {
+//		tail = values[1:]
+//	} else {
+//		tail = []T{}
+//	}
+//	return sumOfArrayGeneric(tail, head+accumulator)
+//}
+
+func sumOfArray(values []float64, accumulator float64) float64 {
 	if len(values) == 0 {
 		return accumulator
 	}
-	head := []T{values[0]}
-	tail := values[1:]
-	return sumOfArray(tail, head[0]+accumulator)
+	head := values[0]
+	var tail []float64
+	if len(values) > 1 {
+		tail = values[1:]
+	} else {
+		tail = []float64{}
+	}
+	return sumOfArray(tail, head+accumulator)
 }
